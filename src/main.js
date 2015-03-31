@@ -30,20 +30,31 @@ TR_start.prototype = {
 		Game.keys = Game.input.keyboard.createCursorKeys();
  		console.log("start");
 
- 		Game.bot = new StaticBot([500,400],Game,"type2");
+ 		Game.bot = new StaticBot([100,400],Game,"type2");
 		Game.player = new Player(Game,"type1");
 		Game.pickableGroup = [];
 		for (var i = 3 - 1; i >= 0; i--) {
 			Game.pickableGroup.push(new PickupElement([200 +i*250,100],Game,"type3"));
 		};
+
+		Game.plateforms = [];
+		creerPlateform(Game);
 	},
 
 	update: function(Game){
 		Game.bot.update();
- 		Game.player.update();
  		for (var i = Game.pickableGroup.length - 1; i >= 0; i--) {
  			Game.pickableGroup[i].update();
  		};
+
+ 		for(var i = 0; i < Game.plateforms.length; i++)
+ 		{
+ 			if(Game.physics.arcade.collide(Game.player.sprite, Game.plateforms[i].sprite))
+ 			{
+ 				Game.player.touching = true;
+ 			}
+ 		}
+ 		Game.player.update();
 	}
 
 }
