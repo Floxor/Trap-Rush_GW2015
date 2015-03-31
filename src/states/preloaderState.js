@@ -25,6 +25,8 @@ TR_preload.prototype = {
 }
 
 function loadStart () {
+
+	this.game.load.image('smoke', 'assets/particuleSmoke.png');
 	this.game.load.image('placeholder1', 'assets/placeholders/pic_cha.png');
 	this.game.load.image('placeholder2', 'assets/placeholders/pic_flo.png');
 	this.game.load.image('placeholder3', 'assets/placeholders/pic_maureen.png');
