@@ -6,8 +6,7 @@ function Knifes(pParams) {
     Trap.call(this, pParams.game, pParams.x, pParams.y, 'trap_knifes');
     this.speed = pParams.speed || 30;
 
-    this.game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
-    this.sprite.body.allowGravity = false;
+    this.init();
 
     this.itsTarget = this.x - 1200 - this.sprite.width * 2;
 
@@ -16,9 +15,20 @@ function Knifes(pParams) {
 
         //COLISION
         this.game.physics.arcade.collide(this.sprite, this.game.player.sprite, function() {
-            
+
         });
     };
 
     this.addTrap();
 }
+
+Knifes.prototype.constructor = Knifes;
+Knifes.prototype = Object.create(Trap.prototype);
+
+Knifes.prototype.init = function () {
+    this.game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+    this.sprite.body.allowGravity = false;
+    this.sprite.outOfBoundsKill = true;
+    this.sprite.checkWorldBounds = true;
+    this.sprite.bringToTop();
+};

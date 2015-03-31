@@ -10,17 +10,14 @@ function Pikes(pParams) {
 
     this.init();
 
-    //First COLLISION
-    this.sprite.hitArea = new Phaser.Rectangle(0,0,this.sprite[0].width,50)
-
-    this.doAction = function() {
+    this.doAction = function () {
         //COLISION
         this.game.physics.arcade.collide(this.sprite.hitArea, this.game.player, function() {
             console.log('kill le joueur');
         });
     };
 
-    this.doActionNormal = function() {
+    this.doActionNormal = function () {
         //COLISION
         this.game.physics.arcade.collide(this.sprite, this.game.player, function() {
             console.log('kill le joueur');
@@ -36,11 +33,14 @@ function Pikes(pParams) {
         console.log('ANIMATION PIKES');
     };
 
+    //First COLLISION
+    this.sprite.hitArea = new Phaser.Rectangle(0,0,this.sprite[0].width,50)
+
     this.addTrap();
 }
 
 Pikes.prototype.constructor = Pikes;
-Pikes.prototype = Object.create(Trap.constructor);
+Pikes.prototype = Object.create(Trap.prototype);
 
 Pikes.prototype.init = function () {
     this.sprite = [];

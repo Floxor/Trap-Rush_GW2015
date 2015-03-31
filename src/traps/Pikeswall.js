@@ -4,12 +4,12 @@
 */
 function Pikeswall(pParams) {
     Trap.call(this, pParams.game, pParams.x, pParams.y, 'trap_pikeswall');
-    this.speed = pParams.speed || 550;
+    this.speed = pParams.speed || 50;
 
     this.loweringTime = 1000;
     this.counter = 0;
 
-    this.doAction = function() {
+    this.doAction = function () {
         //COLISION
         this.game.physics.arcade.collide(this.sprite, this.game.player, function() {
             //kill le joueur
@@ -29,7 +29,8 @@ function Pikeswall(pParams) {
     };
 
     this.addTrap();
+
 }
 
 Pikeswall.prototype.constructor = Pikeswall;
-Pikeswall.prototype = Object.create(Trap.constructor);
+Pikeswall.prototype = Object.create(Trap.prototype);

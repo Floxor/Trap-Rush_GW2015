@@ -18,7 +18,6 @@ TR_preload.prototype = {
 		###########################
   		*/
   		Game.config = httpGetData("src/config/config.json");
-  		console.log(Game.config)
 
   	},
   	update : function (Game) { 	}
@@ -26,6 +25,8 @@ TR_preload.prototype = {
 }
 
 function loadStart () {
+
+	this.game.load.image('smoke', 'assets/particuleSmoke.png');
 	this.game.load.image('placeholder1', 'assets/placeholders/pic_cha.png');
 	this.game.load.image('placeholder2', 'assets/placeholders/pic_flo.png');
 	this.game.load.image('placeholder3', 'assets/placeholders/pic_maureen.png');
@@ -38,6 +39,9 @@ function loadStart () {
     this.game.load.image('trap_bigball', 'assets/traps/bigball.png');
     this.game.load.image('trap_pikeswall', 'assets/traps/pikeswall.png');
     this.game.load.image('trap_fireball', 'assets/traps/fireball.png');
+
+	this.game.load.image('bloc', 'assets/placeholders/Bloc.png');
+    
 }
 
 function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles) {

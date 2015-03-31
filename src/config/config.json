@@ -6,6 +6,20 @@
 			"speedX":1000,
 			"speedY":1500,
 			"maxJumps":2
+		},
+		"type2":{
+			"assetKey":"placeholder3",
+			"gravity":5000,
+			"speedX":1000,
+			"speedY":1500,
+			"maxJumps":2
+		},
+		"type3":{
+			"assetKey":"placeholder4",
+			"gravity":5000,
+			"speedX":1000,
+			"speedY":1500,
+			"maxJumps":2
 		}
 	}
 }

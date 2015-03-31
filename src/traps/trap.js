@@ -22,4 +22,8 @@ function Trap(Game, pX, pY, pSprite) {
     };
 }
 
-Trap.prototype.constructor = Trap;
+Trap.prototype.collide = function () {
+    for (var i = 0; i < this.game.plateforms.length; i++) {
+        this.game.physics.arcade.collide(this.sprite, this.game.plateforms[i].sprite);
+    }
+};

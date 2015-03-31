@@ -4,11 +4,9 @@
 */
 function Bigball(pParams) {
     Trap.call(this, pParams.game, pParams.x, pParams.y, 'trap_bigball');
-    this.speed = pParams.speed || 20;
+    this.speed = pParams.speed || 10;
 
-    this.game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
-    this.sprite.body.collideWorldBounds = true;
-    this.sprite.body.allowGravity = true;
+    this.init();
 
     this.itsTarget = this.x - 1200 - this.sprite.width * 2;
 
@@ -20,12 +18,21 @@ function Bigball(pParams) {
         //bird.animations.play('fly');
 
         //COLISION
-        this.game.physics.arcade.collide(this.sprite, this.game.player.sprite, function() {
-            //kill le joueur
-            console.log('hit');
-        });
+        this.collide();
+    };
+
+    this.doAction = function () {
+        this.collide();
     };
 
     this.addTrap();
-    this.start();
 }
+
+Bigball.prototype.constructor = Bigball;
+Bigball.prototype = Object.create(Trap.prototype);
+
+Bigball.prototype.init = function () {
+    this.game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+    this.sprite.body.allowGravity = true;
+    this.sprite.body.gravity.y = 1500;
+};
