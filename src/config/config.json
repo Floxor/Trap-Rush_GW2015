@@ -1,0 +1,11 @@
+{
+	"playerTypes":{
+		"type1":{
+			"assetKey":"placeholder2",
+			"gravity":5000,
+			"speedX":1000,
+			"speedY":1500,
+			"maxJumps":2
+		}
+	}
+}

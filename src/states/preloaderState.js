@@ -12,6 +12,14 @@ TR_preload.prototype = {
   		Game.load.onLoadComplete.add(loadComplete, this);	
   		Game.load.start();
 
+  		/*
+		###########################
+					JSON
+		###########################
+  		*/
+  		Game.config = httpGetData("src/config/config.json");
+  		console.log(Game.config)
+
   	},
   	update : function (Game) { 	}
   	
