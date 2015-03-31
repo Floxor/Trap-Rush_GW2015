@@ -6,6 +6,7 @@ function Player (Game,type) {
 	this.facingRight			 	= true;
 	this.touchingWall 				= false;
 	this.acceleration 				= 0.1;
+	this.touching  					= false;
 
 
 
@@ -38,10 +39,9 @@ function Player (Game,type) {
 
 Player.prototype.update = function () {
 	this.touchingWall = this.sprite.body.touching.left || this.sprite.body.touching.right;
-
 	if (!this.touchingWall) {
 		this.sprite.body.gravity.y = this.config.gravity;
-		if ((jumpButton.isDown && this.sprite.body.onFloor()) || (jumpButton.isDown && this.sprite.body.touching.down))
+		if ((jumpButton.isDown && this.sprite.body.onFloor()) || (jumpButton.isDown && this.sprite.body.touching.down == true))
 			this.jump();
 		else if (jumpButton.isDown && this.numberJumpsLeft && this.sprite.body.velocity.y > 10){
 			this.numberJumpsLeft--;
