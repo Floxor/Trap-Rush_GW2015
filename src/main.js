@@ -22,11 +22,20 @@ TR_start.prototype = {
 	create : function (Game) {
  		console.log("start");
  		Game.add.sprite(300,300,"placeholder1");
+
+ 		//Liste des traps
+ 		Game.traps = [];
+
+ 		var pikes = new Pikes({x: 500, y: 400, orientation: 'haut'});
 	},
 
 	update: function(Game){
  		console.log("update");
+
+ 		var trapsLength = Game.traps.length;
+ 		for (var i = 0; i < trapsLength; i++) {
+ 			Game.traps[i].doAction();
+ 		}
 	}
 
 }
-

@@ -22,8 +22,10 @@ function loadStart () {
 	this.game.load.image('placeholder2', 'assets/placeholders/pic_flo.png');
 	this.game.load.image('placeholder3', 'assets/placeholders/pic_maureen.png');
 	this.game.load.image('placeholder4', 'assets/placeholders/pic_nico.png');
-	this.game.load.image('placeholder5', 'assets/placeholders/pic_theo.png');
+    this.game.load.image('placeholder5', 'assets/placeholders/pic_theo.png');
 
+    //traps
+	this.game.load.image('trap_pikes', 'assets/traps/pikes.png');
 }
 
 function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles) {
