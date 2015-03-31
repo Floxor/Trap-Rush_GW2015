@@ -30,12 +30,12 @@ TR_start.prototype = {
 		Game.keys = Game.input.keyboard.createCursorKeys();
  		console.log("start");
 
-
+ 		Game.bot = new StaticBot([500,400],Game,"type2");
 		Game.player = new Player(Game,"type1");
 	},
 
 	update: function(Game){
-
+Game.bot.update();
  		Game.player.update();
 	}
 
