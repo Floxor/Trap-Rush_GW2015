@@ -25,7 +25,7 @@ function Lever(pParams) {
 }
 
 Lever.prototype.init = function() {
-    this.sprite = this.game.add.sprite(this.x, this.y, 'trap_bigball', 0);
+    this.sprite = this.game.add.sprite(this.x, this.y, 'trap_lever', 0);
     this.game.physics.enable(this);
     this.game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
     this.sprite.body.allowGravity = false;
