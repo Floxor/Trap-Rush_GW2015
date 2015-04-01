@@ -12,7 +12,9 @@ function init(){
 
 	Game = new Phaser.Game(1200, 720, Phaser.AUTO, 'gameContainer');
 	Game.state.add('preload' , TR_preload);
+	Game.state.add('menu', TR_menu);
 	Game.state.add('debug' , TR_start);
+	Game.state.add('fin', TR_end);
 	Game.state.start('preload');
 }
 
@@ -30,15 +32,15 @@ TR_start.prototype = {
 		Game.keys = Game.input.keyboard.createCursorKeys();
  		console.log("start");
 
+ 		Game.plateforms = [];
+		creerPlateform(Game);
+
  		Game.bot = new StaticBot([100,400],Game,"type2");
 		Game.player = new Player(Game,"type1");
 		Game.pickableGroup = [];
 		for (var i = 3 - 1; i >= 0; i--) {
 			Game.pickableGroup.push(new PickupElement([200 +i*250,100],Game,"type3"));
 		};
-
-		Game.plateforms = [];
-		creerPlateform(Game);
 	},
 
 	update: function(Game){
@@ -55,6 +57,12 @@ TR_start.prototype = {
  			}
  		}
  		Game.player.update();
+
+ 		if(Game.player.sprite.x >= 1100)
+ 		{
+
+ 			Game.state.start('fin');
+ 		}
 	}
 
 }

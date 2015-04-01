@@ -11,6 +11,9 @@ function Plateform(Game, posX, posY)
 	this.sprite.body.bounce.y = 0;
 	this.sprite.body.allowGravity = false;
 	this.sprite.body.immovable = true;
+	this.sprite.body.checkCollision.left = false;
+	this.sprite.body.checkCollision.right = false;
+	this.sprite.body.checkCollision.down = false;
 }
 
 function creerPlateform(Game)
@@ -19,5 +22,5 @@ function creerPlateform(Game)
 	{
 		Game.plateforms.push(new Plateform(Game, 200 + i*400, 650));
 	}
-	Game.plateforms.push(new Plateform(Game, 600, 540));
+	Game.plateforms.push(new Plateform(Game, 600, 300));
 }

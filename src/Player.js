@@ -6,7 +6,6 @@ function Player (Game,type) {
 	this.facingRight			 	= true;
 	this.touchingWall 				= false;
 	this.acceleration 				= 0.1;
-	this.touching  					= false;
 
 
 

@@ -35,6 +35,9 @@ function loadStart () {
 
 	this.game.load.image('bloc', 'assets/placeholders/Bloc.png');
 
+	this.game.load.bitmapFont('ratatouille', 'fonts/AuthenticRatatouille.otf');
+
+	this.game.load.image('button', 'assets/placeholders/button.png');
 }
 
 function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles) {
@@ -42,5 +45,5 @@ function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles) {
 }
 
 function loadComplete () {
-	this.game.state.start("debug");
+	this.game.state.start("menu");
 }
