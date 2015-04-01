@@ -1,5 +1,5 @@
 function Player (Game,type,pos,playerNumber) {
-	this.playerNumber 					= playerNumber || 4;
+	this.playerNumber 				= playerNumber || 4;
 	this.gamepadActivated 			= false
 
 	this.Game 						= Game;
@@ -10,14 +10,20 @@ function Player (Game,type,pos,playerNumber) {
 	this.touchingWall 				= false;
 	this.acceleration 				= 0.1;
 	this.frozen 					= 60;
+	this.punchTimeout 				= 0;
+	this.grabTimeout 				= 0;
 
-
+	var arrayPlayers = [1,2];
+	arrayPlayers.splice(arrayPlayers.indexOf(this.playerNumber),1);
+	this.opponentNumber = arrayPlayers[0];
 
 	this.sprite = Game.add.sprite(pos[0],pos[1],this.config.assetKey,0);
 	Game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	this.sprite.body.bounce.y = 0;
 	this.sprite.body.collideWorldBounds = true;
 	this.sprite.body.gravity.y = this.config.gravity;
+	this.sprite.body.setSize(this.sprite.body.width * 0.8,this.sprite.body.height * 0.8,0,0);
+	this.sprite.body.mass = 0.1;
 	this.sprite.anchor.setTo(0.5,0.5);
 
 /*
@@ -32,14 +38,7 @@ function Player (Game,type,pos,playerNumber) {
 		punch 	: Game.input.keyboard.addKey(Phaser.Keyboard.P)
 	};
 
-	if(Game.input.gamepad.supported && Game.input.gamepad["pad"+playerNumber]) {
-		if(Game.input.gamepad["pad"+playerNumber].enabled)
-			this.gamepadActivated = true;
-		// this.cursors.jump = Game.input.gamepad["pad"+playerNumber].isDown(Phaser.Gamepad.XBOX360_A);
-		// this.cursors.punch = Game.input.gamepad["pad"+playerNumber].isDown(Phaser.Gamepad.XBOX360_X);
-		// this.cursors.grab = Game.input.gamepad["pad"+playerNumber].isDown(Phaser.Gamepad.XBOX360_Y);
-		
-	}
+	this.gamepadActivated = Game.input.gamepad.supported && Game.input.gamepad["pad"+playerNumber];
 
 	
 
@@ -57,20 +56,23 @@ function Player (Game,type,pos,playerNumber) {
 
 	this.rectColli = Game.add.sprite(0, 0, null);
 	Game.physics.enable(this.rectColli, Phaser.Physics.ARCADE);
-	this.rectColli.body.setSize(150, 100, 0, 0);
+	this.rectColli.body.setSize(100, 125, 0, 0);
 	this.rectColli.anchor.setTo(0.5, 0.5);
+
+
 }
 
 
 
 
 Player.prototype.update = function () {
-	// this.cursors.left.isDown 	= this.gamepadActivated ? 	Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0] < -0.3 : this.cursors.left.isDown;
-	// this.cursors.right.isDown 	= this.gamepadActivated ?  	Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0] >  0.3 : this.cursors.right.isDown;
-	// this.cursors.jump.isDown 	= this.gamepadActivated ? 	Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_A,50) : this.cursors.jump.downDuration();
-	// this.cursors.grab.isDown 	= this.gamepadActivated ?  	Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_Y,50) : this.cursors.grab.downDuration();
-	// this.cursors.punch.isDown 	= this.gamepadActivated ?  	Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_X,50) : this.cursors.punch.downDuration();
-
+	if (Game.input.gamepad["pad"+this.playerNumber]._rawPad) {
+		this.cursors.left.isDown 	= this.gamepadActivated ? 	Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0] < -0.3 : this.cursors.left.isDown;
+		this.cursors.right.isDown 	= this.gamepadActivated ?  	Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0] >  0.3 : this.cursors.right.isDown;
+		this.cursors.jump.isDown 	= this.gamepadActivated ? 	Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_A,50) : this.cursors.jump.downDuration();
+		this.cursors.grab.isDown 	= this.gamepadActivated ?  	Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_Y,50) : this.cursors.grab.downDuration();
+		this.cursors.punch.isDown 	= this.gamepadActivated ?  	Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_X,50) : this.cursors.punch.downDuration();
+	};
 
 	
 
@@ -88,7 +90,6 @@ Player.prototype.update = function () {
 	this.touchingWall = this.sprite.body.blocked.left || this.sprite.body.blocked.right;
 	this.sprite.scale.x = this.facingRight ? 1 : -1;
 
-	this.Game.debug.body(this.rectColli)
 	if (!this.touchingWall) {
 		this.sprite.body.gravity.y = this.config.gravity;
 		if ((this.cursors.jump.isDown && this.sprite.body.onFloor()) || (this.cursors.jump.isDown && this.sprite.body.blocked.down))
@@ -115,9 +116,9 @@ Player.prototype.update = function () {
 
 	this.move();
 
-	if (this.cursors.grab.isDown && !this.isGrabbing) 
+	if (this.grabTimeout-- < 0 && this.cursors.grab.isDown) 
 		this.grab();
-	else if (this.cursors.punch.isDown && !this.isPunching) 
+	else if (this.punchTimeout-- < 0 && this.cursors.punch.isDown) 
 		this.punch();
 	this.sprite.body.velocity.y = (this.sprite.body.velocity.y).clamp(-this.config.speedUp,this.config.speedDown);
 	this.rectColli.x = this.sprite.x + this.sprite.width * 0.5 + this.rectColli.width * (this.facingRight - 0.5);
@@ -126,29 +127,27 @@ Player.prototype.update = function () {
 }
 
 Player.prototype.grab = function() {
-	this.isGrabbing = true;
-	console.log("grab");
-	that = this;
-	setTimeout(function() {that.isGrabbing = false}, 500);
+		if (this.Game.physics.arcade.overlap(this.rectColli,this.Game["player"+this.opponentNumber].sprite)) {
+			var angle = this.Game.physics.arcade.angleBetween(this.sprite,this.Game["player"+this.opponentNumber].sprite);
+
+			this.Game["player"+this.opponentNumber].launch(40,- this.config.punchPower * Math.cos(angle),  - 300 - this.config.punchPower * Math.sin(angle));
+		};	
+
+	this.grabTimeout = 30;
+
 }
 
 Player.prototype.punch = function() {
-	this.isPunching = true;
 	/*
 		AnimPunch !
 	*/
-	var arrayPlayers = [1,2];
-	arrayPlayers.splice(arrayPlayers.indexOf(this.playerNumber),1);
-	for (var i = arrayPlayers.length - 1; i >= 0; i--) {
-		if (this.Game.physics.arcade.overlap(this.rectColli,this.Game["player"+arrayPlayers[i]].sprite)) {
-			var angle = this.Game.physics.arcade.angleBetween(this.sprite,this.Game["player"+arrayPlayers[i]].sprite);
-
-			this.Game["player"+arrayPlayers[i]].launch(30,this.config.punchPower * Math.cos(angle),  - 300 + this.config.punchPower * Math.sin(angle));
-		};	
-	};
 	
-	that = this;
-	setTimeout(function() {that.isPunching = false}, 300);
+		if (this.Game.physics.arcade.overlap(this.rectColli,this.Game["player"+this.opponentNumber].sprite)) {
+			var angle = this.Game.physics.arcade.angleBetween(this.sprite,this.Game["player"+this.opponentNumber].sprite);
+
+			this.Game["player"+this.opponentNumber].launch(30,this.config.punchPower * Math.cos(angle),  - 300 + this.config.punchPower * Math.sin(angle));
+		};	
+	this.punchTimeout = 30;
 }
 
 Player.prototype.launch = function(timeStunned,forceX,forceY) {
@@ -158,11 +157,13 @@ Player.prototype.launch = function(timeStunned,forceX,forceY) {
 }
 
 
+
 Player.prototype.move = function() {
 	if (this.deactivateMovementTime-- > 0)
 		return
 	
-
+	//if (this.Game["player"+this.opponentNumber].deactivateMovementTime <= 0)
+	//	this.Game.physics.arcade.collide(this.Game.player1.sprite,this.Game.player2.sprite);
 
  	if (this.cursors.left.isDown){
 		this.facingRight = false;
@@ -215,7 +216,7 @@ function PickupElement (pos,Game,type) {
 	Player.call(this,Game,type,pos);
 	this.sprite.x = pos[0];
 	this.sprite.y = pos[1];
-	this.sprite.body.mass = 0.5;
+	this.sprite.body.mass = 0.05;
 
 	this.sprite.scale.setTo(0.4,0.4);
 }
@@ -226,7 +227,6 @@ PickupElement.prototype = Object.create(Player.prototype);
 PickupElement.prototype.update = function () {
 	this.sprite.body.velocity.x = this.sprite.body.velocity.x * 0.8;
 	if (this.Game.physics.arcade.overlap(this.sprite,this.Game.player1.sprite,null) || this.Game.physics.arcade.overlap(this.sprite,this.Game.player2.sprite,null)) {
-		console.log("overlap with player")
 	};
 	for (var i = this.Game.pickableGroup.length - 1; i >= 0; i--) {
 		this.Game.physics.arcade.collide(this.sprite,this.Game.pickableGroup[i].sprite,null);
