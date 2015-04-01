@@ -40,6 +40,7 @@ function loadStart () {
     this.game.load.image('trap_bigball', 'assets/traps/bigball.png');
     this.game.load.image('trap_pikeswall', 'assets/traps/pikeswall.png');
     this.game.load.image('trap_fireball', 'assets/traps/fireball.png');
+    this.game.load.image('lever', 'assets/traps/lever.png');
 
 	this.game.load.image('bloc', 'assets/placeholders/Bloc.png');
     

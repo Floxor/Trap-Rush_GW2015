@@ -101,27 +101,18 @@ TR_start.prototype = {
 			top: Game.add.sprite(0, -100, false)
 		};
 
-        Game.physics.enable(Game.stageEdges.right, Phaser.Physics.ARCADE);
-        Game.stageEdges.right.body.allowGravity = false;
-        Game.stageEdges.right.width = 100;
-        Game.stageEdges.right.height = Game.height;
+		for(var x in Game.stageEdges) {
+			Game.physics.enable(Game.stageEdges[x], Phaser.Physics.ARCADE);
+			Game.stageEdges[x].body.allowGravity = false;
+		}
 
-        Game.physics.enable(Game.stageEdges.bottom, Phaser.Physics.ARCADE);
-        Game.stageEdges.bottom.body.allowGravity = false;
-        Game.stageEdges.bottom.width = Game.width;
-        Game.stageEdges.bottom.height = 100;
+        Game.stageEdges.right.width 	= Game.stageEdges.left.width 	= 100;
+        Game.stageEdges.right.height 	= Game.stageEdges.left.height 	= Game.height;
+        Game.stageEdges.bottom.width 	= Game.stageEdges.top.width 	= Game.width;
+        Game.stageEdges.bottom.height 	= Game.stageEdges.top.height 	= 100;
 
-        Game.physics.enable(Game.stageEdges.left, Phaser.Physics.ARCADE);
-        Game.stageEdges.left.body.allowGravity = false;
-        Game.stageEdges.left.width = 100;
-        Game.stageEdges.left.height = Game.height;
         Game.stageEdges.left.anchor.setTo(1, 0);
-
-        Game.physics.enable(Game.stageEdges.top, Phaser.Physics.ARCADE);
-        Game.stageEdges.top.body.allowGravity = false;
-        Game.stageEdges.top.width = Game.width;
-        Game.stageEdges.top.height = 100;
-        Game.stageEdges.top.anchor.setTo(0, 1);
+		Game.stageEdges.top.anchor.setTo(0, 1);
 
 	},
 

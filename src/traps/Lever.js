@@ -1,13 +1,13 @@
 /*
 *   Levier utilisé pour activer un piège associé
 *   @params game attend le Game
-*   @params trap attend le piège associer
+*   @params trap attend le piège associer (optinel)
 *   @params x et y est la position du piège
 *   @params callBack est la fonction appelé lors de l'activation du livier
 */
 function Lever(pParams) {
     this.game = pParams.game;
-    this.trap = pParams.trap || false;  //si trap on .start sinon pas. +callBack parce que cool
+    this.trap = pParams.trap || false;
     this.x = pParams.x;
     this.y = pParams.y;
     this.callBack = pParams.callBack || function(){};
@@ -25,7 +25,7 @@ function Lever(pParams) {
 }
 
 Lever.prototype.init = function() {
-    this.sprite = this.game.add.sprite(this.x, this.y, 'trap_lever', 0);
+    this.sprite = this.game.add.sprite(this.x, this.y, 'lever', 0);
     this.game.physics.enable(this);
     this.game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
     this.sprite.body.allowGravity = false;
