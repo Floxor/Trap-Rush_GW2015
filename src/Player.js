@@ -33,10 +33,12 @@ function Player (Game,type,pos,playerNumber) {
 	};
 
 	if(Game.input.gamepad.supported && Game.input.gamepad["pad"+playerNumber]) {
+		if(Game.input.gamepad["pad"+playerNumber].enabled)
+			this.gamepadActivated = true;
 		// this.cursors.jump = Game.input.gamepad["pad"+playerNumber].isDown(Phaser.Gamepad.XBOX360_A);
 		// this.cursors.punch = Game.input.gamepad["pad"+playerNumber].isDown(Phaser.Gamepad.XBOX360_X);
 		// this.cursors.grab = Game.input.gamepad["pad"+playerNumber].isDown(Phaser.Gamepad.XBOX360_Y);
-		this.gamepadActivated = true;
+		
 	}
 
 	
@@ -63,11 +65,11 @@ function Player (Game,type,pos,playerNumber) {
 
 
 Player.prototype.update = function () {
-	this.cursors.left.isDown 	= this.gamepadActivated ? 	Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0] < -0.3 : this.cursors.left.isDown;
-	this.cursors.right.isDown 	= this.gamepadActivated ?  	Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0] >  0.3 : this.cursors.right.isDown;
-	this.cursors.jump.isDown 	= this.gamepadActivated ? 	Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_A,50) : this.cursors.jump.downDuration();
-	this.cursors.grab.isDown 	= this.gamepadActivated ?  	Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_Y,50) : this.cursors.grab.downDuration();
-	this.cursors.punch.isDown 	= this.gamepadActivated ?  	Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_X,50) : this.cursors.punch.downDuration();
+	// this.cursors.left.isDown 	= this.gamepadActivated ? 	Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0] < -0.3 : this.cursors.left.isDown;
+	// this.cursors.right.isDown 	= this.gamepadActivated ?  	Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0] >  0.3 : this.cursors.right.isDown;
+	// this.cursors.jump.isDown 	= this.gamepadActivated ? 	Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_A,50) : this.cursors.jump.downDuration();
+	// this.cursors.grab.isDown 	= this.gamepadActivated ?  	Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_Y,50) : this.cursors.grab.downDuration();
+	// this.cursors.punch.isDown 	= this.gamepadActivated ?  	Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_X,50) : this.cursors.punch.downDuration();
 
 
 	
@@ -174,7 +176,7 @@ Player.prototype.move = function() {
 		if (this.gamepadActivated) 
 			this.sprite.body.velocity.x = (this.sprite.body.velocity.x + this.config.speedX * this.acceleration * Math.abs(Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0])).clamp(-10000, this.config.speedX);
 		else
-			this.sprite.body.velocity.x = (this.sprite.body.velocity.x + this.config.speedX * this.acceleration * Math.abs(Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0])).clamp(-10000, this.config.speedX);
+			this.sprite.body.velocity.x = (this.sprite.body.velocity.x + this.config.speedX * this.acceleration).clamp(-10000, this.config.speedX);
 	}
 	else if (this.sprite.body.onFloor() || this.sprite.body.blocked.down){
 		this.sprite.body.velocity.x = this.sprite.body.velocity.x * 0.25;

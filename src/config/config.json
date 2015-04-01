@@ -1,22 +1,20 @@
 {
 	"playerTypes":{
 		"type1":{
-			"assetKey":"placeholder3",
+			"assetKey":"player1",
 			"gravity":3000,
-			"speedX":750,
-			"speedUp":1000,
-			"speedDown":500,
-			"maxJumps":2,
-			"punchPower": 750
+			"speedX":850,
+			"speedUp":1200,
+			"speedDown":900,
+			"maxJumps":2
 		},
 		"type2":{
 			"assetKey":"placeholder3",
 			"gravity":3000,
-			"speedX":750,
+			"speedX":500,
 			"speedUp":1000,
 			"speedDown":500,
-			"maxJumps":2,
-			"punchPower": 750
+			"maxJumps":2
 		},
 		"type3":{
 			"assetKey":"placeholder4",
@@ -24,8 +22,7 @@
 			"speedX":500,
 			"speedUp":1000,
 			"speedDown":500,
-			"maxJumps":2,
-			"punchPower": 750
+			"maxJumps":2
 		}
 	}
 }
