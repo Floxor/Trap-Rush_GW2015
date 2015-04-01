@@ -6,15 +6,17 @@
 			"speedX":750,
 			"speedUp":1000,
 			"speedDown":500,
-			"maxJumps":2
+			"maxJumps":2,
+			"punchPower": 750
 		},
 		"type2":{
 			"assetKey":"placeholder3",
 			"gravity":3000,
-			"speedX":500,
+			"speedX":750,
 			"speedUp":1000,
 			"speedDown":500,
-			"maxJumps":2
+			"maxJumps":2,
+			"punchPower": 750
 		},
 		"type3":{
 			"assetKey":"placeholder4",
@@ -22,7 +24,8 @@
 			"speedX":500,
 			"speedUp":1000,
 			"speedDown":500,
-			"maxJumps":2
+			"maxJumps":2,
+			"punchPower": 750
 		}
 	}
 }

@@ -78,7 +78,8 @@ TR_start.prototype = {
 		console.log("start");
 
 		Game.bots = [];
-		Game.player = new Player(Game,"type1",[150,150],1);
+		Game.player1 = new Player(Game,"type1",[150,150],1);
+		Game.player2 = new Player(Game,"type3",[250,150],2);
 		Game.pickableGroup = [];
 		for (var i = 3 - 1; i >= 0; i--) {
 			Game.pickableGroup.push(new PickupElement([200 +i*250,100],Game,"type3"));
@@ -87,7 +88,7 @@ TR_start.prototype = {
 //		Game.plateforms = [];
 //		creerPlateform(Game);
 		Game.shakeWorld = 0;
-		Game.camera.follow(Game.player.sprite);
+		Game.camera.follow(Game.player1.sprite);
 	},
 
 	update: function(Game){
@@ -111,8 +112,10 @@ TR_start.prototype = {
 			Game.physics.arcade.collideSpriteVsTilemapLayer(Game.pickableGroup[i].sprite, Game.tilesCollision);
 			Game.pickableGroup[i].update();
 		};
-		Game.physics.arcade.collideSpriteVsTilemapLayer(Game.player.sprite, Game.tilesCollision);
-		Game.player.update();
+		Game.physics.arcade.collideSpriteVsTilemapLayer(Game.player1.sprite, Game.tilesCollision);
+		Game.physics.arcade.collideSpriteVsTilemapLayer(Game.player2.sprite, Game.tilesCollision);
+		Game.player2.update();
+		Game.player1.update();
 	},
 
 	render:function (Game) {
