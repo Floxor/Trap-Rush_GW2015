@@ -8,12 +8,9 @@ function Fireball(pParams) {
 
     this.init();
 
-    this.doAction = function () {
+    this.doNormal = function () {
 
-        //COLISION
-        this.game.physics.arcade.overlap(this.sprite, this.game.player.sprite, function() {
-            //kill le joueur
-        });
+        this.testKillPlayers();
 
     };
 
@@ -24,8 +21,6 @@ Fireball.prototype.constructor = Fireball;
 Fireball.prototype = Object.create(Trap.prototype);
 
 Fireball.prototype.init = function () {
-    this.game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
-    this.sprite.body.allowGravity = false;
     this.sprite.anchor.setTo(0.5, 0.5);
     this.sprite.angle = 90;
 
@@ -39,7 +34,6 @@ Fireball.prototype.init = function () {
     this.sprite.body.velocity.y         = 750;
 
     //Destroy
-    //this.sprite.lifespan = 5000;
     var _this = this;
     var delay = setTimeout(function() {
         _this.sprite.body.collideWorldBounds = false;

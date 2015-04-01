@@ -10,13 +10,12 @@ function Knifes(pParams) {
 
     this.itsTarget = this.x - 1200 - this.sprite.width * 2;
 
-    this.doActionNormal = function () {
-        if(this.sprite.x > this.itsTarget) this.sprite.x -= this.speed;
-
-        //COLISION
-        this.game.physics.arcade.collide(this.sprite, this.game.player.sprite, function() {
-
-        });
+    this.doNormal = function () {
+        this.sprite.x -= this.speed;
+        this.testKillPlayers();
+        if (this.sprite.x < 0) {
+            this.sprite.outOfBoundsKill = true;
+        }
     };
 
     this.addTrap();
@@ -26,9 +25,7 @@ Knifes.prototype.constructor = Knifes;
 Knifes.prototype = Object.create(Trap.prototype);
 
 Knifes.prototype.init = function () {
-    this.game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
     this.sprite.body.allowGravity = false;
-    this.sprite.outOfBoundsKill = true;
     this.sprite.checkWorldBounds = true;
     this.sprite.bringToTop();
 };

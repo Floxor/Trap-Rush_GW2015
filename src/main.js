@@ -43,7 +43,8 @@ TR_start.prototype = {
 		Game.plateforms = [];
 		creerPlateform(Game);
 
-		var myTrapd = new Fireball({game: Game, x: 400, y: 100});
+		var myTrapd = new Pikes({game: Game, x: 60, y: 120, speed:10, quantity:5});
+		//myTrapd.start();
 	},
 
 	update: function(Game){
@@ -63,7 +64,7 @@ TR_start.prototype = {
 
  		var trapsLength = Game.traps.length;
  		for (var i = 0; i < trapsLength; i++) {
- 			Game.traps[i].doAction();
+ 			Game.traps[i].doLoop();
  		}
 	}
 

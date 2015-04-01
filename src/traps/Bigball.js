@@ -10,7 +10,7 @@ function Bigball(pParams) {
 
     this.itsTarget = this.x - 1200 - this.sprite.width * 2;
 
-    this.doActionNormal = function () {
+    this.doAction = function () {
         if(this.sprite.x > this.itsTarget) this.sprite.x -= this.speed;
 
         //ANIMATION
@@ -19,10 +19,13 @@ function Bigball(pParams) {
 
         //COLISION
         this.collide();
+        this.testKillPlayers();
     };
 
-    this.doAction = function () {
+    this.doNormal = function () {
         this.collide();
+        //this.game.physics.arcade.collide(this.game.player.sprite, this.sprite);
+        this.testKillPlayers();
     };
 
     this.addTrap();
@@ -32,7 +35,6 @@ Bigball.prototype.constructor = Bigball;
 Bigball.prototype = Object.create(Trap.prototype);
 
 Bigball.prototype.init = function () {
-    this.game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
     this.sprite.body.allowGravity = true;
     this.sprite.body.gravity.y = 1500;
 };

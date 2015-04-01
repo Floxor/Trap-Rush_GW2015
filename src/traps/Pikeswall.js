@@ -9,23 +9,17 @@ function Pikeswall(pParams) {
     this.loweringTime = 1000;
     this.counter = 0;
 
-    this.doAction = function () {
-        //COLISION
-        this.game.physics.arcade.collide(this.sprite, this.game.player, function() {
-            //kill le joueur
-        });
+    this.doNormal = function () {
+        this.testKillPlayers();
     };
 
-    this.doActionNormal = function () {
+    this.doAction = function () {
         if (this.counter < this.loweringTime) {
             //this.sprite.angle(90);
             this.game.add.tween(this.sprite).to( { angle: 90 }, this.speed, Phaser.Easing.Linear.None, true);
         }
 
-        //COLISION
-        this.game.physics.arcade.collide(this.sprite, this.game.player, function() {
-            //kill le joueur
-        });
+        this.testKillPlayers();
     };
 
     this.addTrap();
