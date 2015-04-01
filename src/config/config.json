@@ -5,25 +5,38 @@
 			"gravity":3000,
 			"speedX":750,
 			"speedUp":1000,
-			"speedDown":500,
+			"type":"player",
+			"speedDown":750,
 			"maxJumps":2,
 			"punchPower": 750
 		},
 		"type2":{
-			"assetKey":"placeholder3",
+			"assetKey":"placeholder2",
 			"gravity":3000,
+			"type":"player",
 			"speedX":750,
 			"speedUp":1000,
-			"speedDown":500,
+			"speedDown":750,
+			"maxJumps":2,
+			"punchPower": 750
+		},
+		"type4":{
+			"assetKey":"placeholder5",
+			"gravity":3000,
+			"type":"object",
+			"speedX":750,
+			"speedUp":1000,
+			"speedDown":750,
 			"maxJumps":2,
 			"punchPower": 750
 		},
 		"type3":{
 			"assetKey":"placeholder4",
 			"gravity":3000,
-			"speedX":500,
+			"speedX":750,
+			"type":"player",
 			"speedUp":1000,
-			"speedDown":500,
+			"speedDown":750,
 			"maxJumps":2,
 			"punchPower": 750
 		}

@@ -10,7 +10,7 @@ function init(){
 	 if (Game)
 		return;
 
-	Game = new Phaser.Game(1200, 720, Phaser.AUTO, 'gameContainer');
+	Game = new Phaser.Game(1440, 864, Phaser.AUTO, 'gameContainer');
 	Game.state.add('preload' , TR_preload);
 	Game.state.add('debug' , TR_start);
 	Game.state.start('preload');
@@ -30,7 +30,7 @@ TR_start.prototype = {
 		Game.physics.startSystem(Phaser.Physics.ARCADE);
 		Game.stage.backgroundColor = '#38384B';
 		Game.time.deltaCap=0.02;
-		Game.physics.arcade.frameRate = 1 / 60;
+		Game.physics.arcade.frameRate = 1 /120;
 		Game.physics.arcade.gravity.y = 0;
 		Game.keys = Game.input.keyboard.createCursorKeys();
 		Game.map = Game.add.tilemap('map');
@@ -82,13 +82,14 @@ TR_start.prototype = {
 		Game.player2 = new Player(Game,"type3",[250,150],2);
 		Game.pickableGroup = [];
 		for (var i = 3 - 1; i >= 0; i--) {
-			Game.pickableGroup.push(new PickupElement([200 +i*250,100],Game,"type3"));
+			Game.pickableGroup.push(new PickupElement([200 +i*250,100],Game,"type4"));
 		};
 
 //		Game.plateforms = [];
 //		creerPlateform(Game);
 		Game.shakeWorld = 0;
-		Game.camera.follow(Game.player1.sprite);
+		Game.centerCamera = Game.add.sprite(0,0,null);
+		Game.camera.follow(Game.centerCamera);
 	},
 
 	update: function(Game){
@@ -112,15 +113,31 @@ TR_start.prototype = {
 			Game.physics.arcade.collideSpriteVsTilemapLayer(Game.pickableGroup[i].sprite, Game.tilesCollision);
 			Game.pickableGroup[i].update();
 		};
+
 		Game.physics.arcade.collideSpriteVsTilemapLayer(Game.player1.sprite, Game.tilesCollision);
 		Game.physics.arcade.collideSpriteVsTilemapLayer(Game.player2.sprite, Game.tilesCollision);
 		Game.player2.update();
 		Game.player1.update();
+		fixCamera(Game);
+
 	},
 
 	render:function (Game) {
 
 	}
+
+}
+
+function fixCamera (Game) {
+	var angleBetween2Players 	= this.Game.physics.arcade.angleBetween(this.Game.player1.sprite,this.Game.player2.sprite);
+	var distanceBetween2Players = this.Game.physics.arcade.distanceBetween(this.Game.player1.sprite,this.Game.player2.sprite);
+	 Game.centerCamera.x = this.Game.player1.sprite.x + Math.cos(angleBetween2Players) * distanceBetween2Players * 0.5;
+	 Game.centerCamera.y = this.Game.player1.sprite.y + Math.sin(angleBetween2Players) * distanceBetween2Players * 0.5;
+
+
+	// if (distanceBetween2Players > 1000) {
+	// 	Game.world.scale.setTo(1000 / distanceBetween2Players);
+	// };
 
 }
 
