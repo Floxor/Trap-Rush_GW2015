@@ -1,15 +1,24 @@
 /*
 *   Class mère des pièges
 */
-function Trap(Game, pX, pY, pSprite) {
-    this.game = Game;
-    this.x = pX;
-    this.y = pY;
-    if (pSprite) {
-        this.sprite = Game.add.sprite(this.x, this.y, pSprite, 0);
+function Trap(pParams) {
+    this.game = pParams.game;
+    this.x = pParams.x;
+    this.y = pParams.y;
+    if (pParams.sprite) {
+        this.sprite = Game.add.sprite(this.x, this.y, pParams.sprite, 0);
         this.game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
         this.sprite.body.allowGravity = false;
     }
+    if (pParams.lever) {
+        new Lever({
+            game: this.game,
+            x: pParams.lever.x,
+            y: pParams.lever.y,
+            trap: this
+        });
+    }
+    this.simplePattern = false; // doit être à true quand le trap s'enclanche dès ça création (il n'utilise pas de doAction)
 
     Game.physics.enable(this);
 
@@ -22,15 +31,15 @@ function Trap(Game, pX, pY, pSprite) {
     };
 
     this.start = function() {
-        this.doLoop = this.doAction;
+        if (!this.simplePattern) {
+            this.doLoop = this.doAction;
+        }
     };
 
 }
 
 Trap.prototype.collide = function () {
-    for (var i = 0; i < this.game.plateforms.length; i++) {
-        this.game.physics.arcade.collide(this.sprite, this.game.plateforms[i].sprite);
-    }
+    this.game.physics.arcade.collideSpriteVsTilemapLayer(this.sprite, this.game.tilesCollision);
 };
 
 Trap.prototype.testKillPlayers = function () {

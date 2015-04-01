@@ -1,11 +1,11 @@
 /**
 *   La méthode start() doit être appeler pour actionner le piège
-*   @parm orientation attend un string qui défini si les piques sont vers le 'haut' ou vers le 'bas'
-*   @parm quantity défini la quantité de pique, par lot de 3
+*   @param orientation attend un string qui défini si les piques sont vers le 'top' ou vers le 'bottom'
+*   @param quantity défini la quantité de pique, par lot de 3
 */
 function Pikes(pParams) {
-    Trap.call(this, pParams.game, pParams.x, pParams.y);
-    this.orientation = pParams.orientation || 'haut';
+    Trap.call(this, {game: pParams.game, x: pParams.x, y: pParams.y, lever: pParams.lever});
+    this.orientation = pParams.orientation || 'top';
     this.quantity = pParams.quantity || 1;
 
     this.init();
@@ -57,12 +57,12 @@ Pikes.prototype.init = function () {
         this.hitArea = this.game.add.sprite(0, 0, null);
         this.game.physics.enable(this.hitArea, Phaser.Physics.ARCADE);
         this.hitArea.body.allowGravity = false;
-        this.hitArea.body.setSize(this.sprite[0].width * this.quantity, 10, this.sprite[0].x, this.sprite[0].y)
+        this.hitArea.body.setSize(this.sprite[0].width * this.quantity, 10, this.sprite[0].x, this.sprite[0].y);
         
 
-        if (this.orientation === 'haut') {
+        if (this.orientation === 'top') {
             this.sprite[i].scale.y = 1;
-        } else if (this.orientation === 'bas') {
+        } else if (this.orientation === 'bottom') {
             this.sprite[i].scale.y = -1;
         }
     }

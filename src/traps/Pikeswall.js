@@ -1,9 +1,10 @@
 /**
 *   La méthode start() doit être appeler pour actionner le piège
-*   @parm speed défini une vietesse de mouvement, par défaut est à 50
+*   @param speed défini une vietesse de mouvement, par défaut est à 50
 */
 function Pikeswall(pParams) {
-    Trap.call(this, pParams.game, pParams.x, pParams.y, 'trap_pikeswall');
+    Trap.call(this, {game: pParams.game, x: pParams.x, y: pParams.y, sprite:'trap_pikeswall', lever: pParams.lever});
+
     this.speed = pParams.speed || 50;
 
     this.loweringTime = 1000;
