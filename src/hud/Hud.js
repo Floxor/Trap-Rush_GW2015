@@ -25,5 +25,5 @@ Hud.prototype.init = function() {
 
 Hud.prototype.startCountdown = function() {
     this.countdown.animations.add('countdown');
-    this.countdown.animations.play('countdown', 20, false, false);
+    this.countdown.animations.play('countdown', 20, false, true);
 };
