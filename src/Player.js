@@ -13,13 +13,13 @@ function Player (Game,type,pos,playerNumber) {
 	this.frozen 					= 60;
 	this.punchTimeout 				= 0;
 	this.grabTimeout 				= 0;
+	this.activeSpeedX 				= this.config.speedX;
 
 	var arrayPlayers = [1,2];
 	arrayPlayers.splice(arrayPlayers.indexOf(this.playerNumber),1);
 	this.opponentNumber = arrayPlayers[0];
 
 	this.sprite = Game.add.sprite(pos[0],pos[1],this.config.assetKey,0);
-	this.sprite.scale.setTo(this.config.scale[0],this.config.scale[1]);
 	Game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	this.sprite.body.bounce.y = 0;
 	this.sprite.body.gravity.y = this.config.gravity;
@@ -30,6 +30,7 @@ function Player (Game,type,pos,playerNumber) {
 	
 	this.sprite.body.mass = 0.1;
 	this.sprite.anchor.setTo(0.5,0.5);
+	this.sprite.scale.setTo(this.config.scale[0],this.config.scale[1]);
 
 /*
 	this.animations.add('left', [0, 1, 2, 3], 10, true);
@@ -44,9 +45,7 @@ function Player (Game,type,pos,playerNumber) {
 		punch 	: Game.input.keyboard.addKey(Phaser.Keyboard.P)
 	};
 
-	if (Game.input.gamepad.supported && Game.input.gamepad["pad"+playerNumber])
-		if (Game.input.gamepad["pad"+playerNumber]._rawPad)
-			this.gamepadActivated = true;
+	this.gamepadActivated = Game.input.gamepad["pad"+playerNumber] ? Game.input.gamepad["pad"+playerNumber]._rawPad : false;
 
 
 	this.smokeEmitter = Game.add.emitter(Game.world.centerX, Game.world.height *0.5, Game.world.width * 0.5);
@@ -74,6 +73,8 @@ function Player (Game,type,pos,playerNumber) {
 
 Player.prototype.update = function () {
 
+	this.gamepadActivated = this.Game.input.gamepad["pad"+this.playerNumber] ? this.Game.input.gamepad["pad"+this.playerNumber]._rawPad : false;
+
 	this.sprite.body.velocity.x = Math.abs(this.sprite.body.velocity.x) < 1? 0 : this.sprite.body.velocity.x;
 	this.sprite.body.velocity.y = Math.abs(this.sprite.body.velocity.y) < 1? 0 : this.sprite.body.velocity.y;
 
@@ -85,7 +86,7 @@ Player.prototype.update = function () {
 		this.cursors.jump.isDown 	= this.gamepadActivated ? this.Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_A,50) : this.cursors.jump.downDuration();
 		this.cursors.grab.isDown 	= this.gamepadActivated ? this.Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_Y,50) : this.cursors.grab.downDuration();
 		this.cursors.punch.isDown 	= this.gamepadActivated ? this.Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_X,50) : this.cursors.punch.downDuration();
-	};
+	}	
 
 	this.slidding = this.cursors.down.isDown;
 	
@@ -106,10 +107,10 @@ Player.prototype.update = function () {
 
 	if (this.slidding) {
 		this.deactivateMovementTime = 1;
-		if (this.sprite.body.velocity.x < -this.config.speedX * 0.3)
-			this.sprite.body.velocity.x = (this.sprite.body.velocity.x).clamp(-this.config.speedX, -this.config.speedX * 0.3);
-		else if (this.sprite.body.velocity.x > this.config.speedX * 0.3)
-			this.sprite.body.velocity.x = (this.sprite.body.velocity.x).clamp(this.config.speedX * 0.3, this.config.speedX);
+		if (this.sprite.body.velocity.x < -this.activeSpeedX  * 0.3)
+			this.sprite.body.velocity.x = (this.sprite.body.velocity.x).clamp(-this.activeSpeedX , -this.activeSpeedX  * 0.3);
+		else if (this.sprite.body.velocity.x > this.activeSpeedX  * 0.3)
+			this.sprite.body.velocity.x = (this.sprite.body.velocity.x).clamp(this.activeSpeedX  * 0.3, this.activeSpeedX );
 		this.sprite.body.setSize(this.originalBody.width,this.originalBody.height * 0.5,0,this.originalBody.height * 0.25);
 	}
 	else if(this.cursors.down.realeased)
@@ -132,7 +133,7 @@ Player.prototype.update = function () {
 			this.jump();
 		else if (this.cursors.jump.isDown){
 			this.numberJumpsLeft = this.config.maxJumps - 1;
-			this.launch(10,this.config.speedX  * (this.sprite.body.blocked.left - this.sprite.body.blocked.right) * 0.75,-this.config.speedUp);
+			this.launch(10,this.activeSpeedX   * (this.sprite.body.blocked.left - this.sprite.body.blocked.right) * 0.75,-this.config.speedUp);
 		}
 		if (!this.sprite.body.onFloor()) {
 			this.smokeEmitter.emitX = this.sprite.x + this.sprite.width * 0.5 + Math.random() * 20 - 10;
@@ -162,7 +163,7 @@ Player.prototype.grab = function() {
 
 		if (this.carrying) {
 			var angle = this.Game.physics.arcade.angleBetween(this.sprite,this.Game["player"+this.opponentNumber].sprite);
-			this.objectCarried.throw(this.Game["player"+this.opponentNumber],this.config.punchPower * Math.cos(angle) * 2,  this.config.punchPower * Math.sin(angle))
+			this.objectCarried.throw(this.Game["player"+this.opponentNumber],this.config.punchPower + this.config.punchPower * Math.cos(angle) * 0.5,  this.config.punchPower +  this.config.punchPower * Math.sin(angle))
 			this.carrying = false;
 			this.objectCarried = null;
 			return;
@@ -213,16 +214,16 @@ Player.prototype.move = function() {
  	if (this.cursors.left.isDown){
 		this.facingRight = false;
 		if (this.gamepadActivated) 
-			this.sprite.body.velocity.x = (this.sprite.body.velocity.x - this.config.speedX * this.acceleration * Math.abs(this.Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0])).clamp(-this.config.speedX, 10000);
+			this.sprite.body.velocity.x = (this.sprite.body.velocity.x - this.activeSpeedX  * this.acceleration * Math.abs(this.Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0])).clamp(-this.activeSpeedX , 10000);
 		else
-			this.sprite.body.velocity.x = (this.sprite.body.velocity.x - this.config.speedX * this.acceleration).clamp(-this.config.speedX, 10000);
+			this.sprite.body.velocity.x = (this.sprite.body.velocity.x - this.activeSpeedX  * this.acceleration).clamp(-this.activeSpeedX , 10000);
  	}
 	else if (this.cursors.right.isDown){
 		this.facingRight = true;
 		if (this.gamepadActivated) 
-			this.sprite.body.velocity.x = (this.sprite.body.velocity.x + this.config.speedX * this.acceleration * Math.abs(this.Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0])).clamp(-10000, this.config.speedX);
+			this.sprite.body.velocity.x = (this.sprite.body.velocity.x + this.activeSpeedX  * this.acceleration * Math.abs(this.Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0])).clamp(-10000, this.activeSpeedX );
 		else
-			this.sprite.body.velocity.x = (this.sprite.body.velocity.x + this.config.speedX * this.acceleration).clamp(-10000, this.config.speedX);
+			this.sprite.body.velocity.x = (this.sprite.body.velocity.x + this.activeSpeedX  * this.acceleration).clamp(-10000, this.activeSpeedX );
 	}
 	else if (this.sprite.body.onFloor() || this.sprite.body.blocked.down){
 		this.sprite.body.velocity.x = this.sprite.body.velocity.x * 0.25;

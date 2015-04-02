@@ -29,6 +29,7 @@ function loadStart () {
     this.game.load.spritesheet('tilesetPlaceholder', 'assets/placeholders/collision.png');
     this.game.load.spritesheet('tilesetPlaceholder2', 'assets/placeholders/tileset60x60.png');
 	this.game.load.image('smoke', 'assets/particuleSmoke.png');
+	this.game.load.image('background1', 'assets/background_1.png');
 	this.game.load.image('placeholder1', 'assets/placeholders/pic_cha.png');
 	this.game.load.image('placeholder2', 'assets/placeholders/pic_flo.png');
 	this.game.load.image('placeholder3', 'assets/placeholders/pic_maureen.png');

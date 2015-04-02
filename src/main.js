@@ -26,6 +26,8 @@ TR_start.prototype = {
 	},
 
 	create : function (Game) {
+		Game.background = Game.add.tileSprite(0,0,Game.cache.getImage("background1").width,Game.height,"background1");
+		Game.background.fixedToCamera  = true;
 		Game.input.gamepad.start()
 		Game.physics.startSystem(Phaser.Physics.ARCADE);
 		Game.stage.backgroundColor = '#38384B';
@@ -88,7 +90,7 @@ TR_start.prototype = {
 //		creerPlateform(Game);
 		Game.shakeWorld = 0;
 		Game.centerCamera = Game.add.sprite(0,0,null);
-		Game.camera.follow(Game.player1.sprite);
+		Game.camera.follow(Game.centerCamera);
 	},
 
 	update: function(Game){
@@ -132,8 +134,7 @@ function fixCamera (Game) {
 	var distanceBetween2Players = this.Game.physics.arcade.distanceBetween(this.Game.player1.sprite,this.Game.player2.sprite);
 	 Game.centerCamera.x = this.Game.player1.sprite.x + Math.cos(angleBetween2Players) * distanceBetween2Players * 0.5;
 	 Game.centerCamera.y = this.Game.player1.sprite.y + Math.sin(angleBetween2Players) * distanceBetween2Players * 0.5;
-
-
+	Game.background.tilePosition.set(-Game.camera.x * 0.1, 0);
 	// if (distanceBetween2Players > 1000) {
 	// 	Game.world.scale.setTo(1000 / distanceBetween2Players);
 	// };
