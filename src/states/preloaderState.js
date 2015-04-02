@@ -24,6 +24,7 @@ function loadStart () {
 	this.game.load.image('placeholder4', 'assets/placeholders/pic_nico.png');
 	this.game.load.image('placeholder5', 'assets/placeholders/pic_theo.png');
 
+    this.game.load.spritesheet('countdown', 'assets/countdown.png', 114, 153);
 }
 
 function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles) {
