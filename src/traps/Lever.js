@@ -26,6 +26,7 @@ function Lever(pParams) {
 
 Lever.prototype.init = function() {
     this.sprite = this.game.add.sprite(this.x, this.y, 'lever', 0);
+    this.sprite.anchor.setTo(0, 1);
     this.game.physics.enable(this);
     this.game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
     this.sprite.body.allowGravity = false;

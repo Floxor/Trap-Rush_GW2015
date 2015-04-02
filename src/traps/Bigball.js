@@ -50,6 +50,7 @@ Bigball.prototype.constructor = Bigball;
 Bigball.prototype = Object.create(Trap.prototype);
 
 Bigball.prototype.init = function () {
+    this.sprite.anchor.setTo(0.5, 1);
     this.sprite.body.allowGravity = true;
     this.sprite.body.gravity.y = 1500;
 };

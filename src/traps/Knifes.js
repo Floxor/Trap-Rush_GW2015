@@ -35,6 +35,7 @@ Knifes.prototype.constructor = Knifes;
 Knifes.prototype = Object.create(Trap.prototype);
 
 Knifes.prototype.init = function () {
+    this.sprite.anchor.setTo(0, 1);
     this.simplePattern = true;
     this.sprite.body.allowGravity = false;
     this.sprite.checkWorldBounds = true;
