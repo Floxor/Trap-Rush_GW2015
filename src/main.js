@@ -10,7 +10,8 @@ function init(){
 	 if (Game)
 		return;
 
-	Game = new Phaser.Game(1200, 720, Phaser.AUTO, 'gameContainer');
+	//Game = new Phaser.Game(1440, 864, Phaser.AUTO, 'gameContainer');
+	Game = new Phaser.Game(1200, 720, Phaser.CANVAS, 'gameContainer', null, false, null);
 	Game.state.add('preload' , TR_preload);
 	Game.state.add('debug' , TR_start);
 	Game.state.start('preload');
@@ -25,22 +26,15 @@ TR_start.prototype = {
 	},
 
 	create : function (Game) {
-
 		Game.input.gamepad.start()
 		Game.physics.startSystem(Phaser.Physics.ARCADE);
 		Game.stage.backgroundColor = '#38384B';
-		Game.time.deltaCap=0.02;
-		Game.physics.arcade.frameRate = 1 / 60;
+		Game.time.desiredFps = 50;
 		Game.physics.arcade.gravity.y = 0;
-		Game.keys = Game.input.keyboard.createCursorKeys();
- 		console.log("start");
-
- 		//Liste des traps
- 		Game.traps = [];
-
 		Game.map = Game.add.tilemap('map');
-		Game.map.addTilesetImage('collision', 'tilesetPlaceholder');
-
+		Game.map.addTilesetImage('collision', 'tilesetPlaceholder2');
+		Game.scale.compatibility.forceMinimumDocumentHeight = true
+	//	Game.add.plugin(Phaser.Plugin.Debug);
 		Game.map.layers.forEach(function(l){
 			var layer=Game.map.createLayer(l.name);
 		
@@ -50,7 +44,6 @@ TR_start.prototype = {
 				l.data.forEach(function(e){
 					e.forEach(function(t){
 						if (t.index >-1) {
-							t.slopeIndex = t.index - firstgid;
 						}
 
 						if (t.index < 0) {
@@ -77,43 +70,25 @@ TR_start.prototype = {
 			
 			layer.resizeWorld();
 		}, Game);
+		Game.map.autoCull = true;
 
 		Game.world.setBounds(0, 0, Game.map.widthInPixels, Game.map.heightInPixels);
 
 		console.log("start");
 
 		Game.bots = [];
-		Game.player = new Player(Game,"type1",[150,150],1);
-
+		Game.player1 = new Player(Game,"type1",[150,150],1);
+		Game.player2 = new Player(Game,"type3",[250,150],2);
 		Game.pickableGroup = [];
 		for (var i = 3 - 1; i >= 0; i--) {
-			Game.pickableGroup.push(new PickupElement([200 +i*250,100],Game,"type3"));
+			Game.pickableGroup.push(new PickupElement([500 +i*50,100],Game,"type4"));
 		};
 
+//		Game.plateforms = [];
+//		creerPlateform(Game);
 		Game.shakeWorld = 0;
-		Game.camera.follow(Game.player.sprite);
-
-		//Bords du stage
-		Game.stageEdges = {
-			right: Game.add.sprite(Game.width, 0, false),
-			bottom: Game.add.sprite(0, Game.height, false),
-			left: Game.add.sprite(-100, 0, false),
-			top: Game.add.sprite(0, -100, false)
-		};
-
-		for(var x in Game.stageEdges) {
-			Game.physics.enable(Game.stageEdges[x], Phaser.Physics.ARCADE);
-			Game.stageEdges[x].body.allowGravity = false;
-		}
-
-        Game.stageEdges.right.width 	= Game.stageEdges.left.width 	= 100;
-        Game.stageEdges.right.height 	= Game.stageEdges.left.height 	= Game.height;
-        Game.stageEdges.bottom.width 	= Game.stageEdges.top.width 	= Game.width;
-        Game.stageEdges.bottom.height 	= Game.stageEdges.top.height 	= 100;
-
-        Game.stageEdges.left.anchor.setTo(1, 0);
-		Game.stageEdges.top.anchor.setTo(0, 1);
-
+		Game.centerCamera = Game.add.sprite(0,0,null);
+		Game.camera.follow(Game.player1.sprite);
 	},
 
 	update: function(Game){
@@ -134,30 +109,36 @@ TR_start.prototype = {
 		};
 
 		for (var i = Game.pickableGroup.length - 1; i >= 0; i--) {
-			Game.physics.arcade.collideSpriteVsTilemapLayer(Game.pickableGroup[i].sprite, Game.tilesCollision);
+			if (!Game.pickableGroup[i].goThroughMap) 
+				Game.physics.arcade.collideSpriteVsTilemapLayer(Game.pickableGroup[i].sprite, Game.tilesCollision);
 			Game.pickableGroup[i].update();
 		};
-		Game.physics.arcade.collideSpriteVsTilemapLayer(Game.player.sprite, Game.tilesCollision);
-		Game.player.update();
 
-		var trapsLength = Game.traps.length;
- 		for (var i = 0; i < trapsLength; i++) {
- 			Game.traps[i].doLoop();
- 		}
-
- 		Game.stageEdges.right.x = Game.camera.x + Game.width;
- 		Game.stageEdges.right.y = Game.camera.y;
- 		Game.stageEdges.bottom.x = Game.camera.x;
- 		Game.stageEdges.bottom.y = Game.camera.y + Game.height;
- 		Game.stageEdges.left.x = Game.camera.x;
- 		Game.stageEdges.left.y = Game.camera.y;
- 		Game.stageEdges.top.x = Game.camera.x;
- 		Game.stageEdges.top.y = Game.camera.y;
+		Game.physics.arcade.collideSpriteVsTilemapLayer(Game.player1.sprite, Game.tilesCollision);
+		Game.physics.arcade.collideSpriteVsTilemapLayer(Game.player2.sprite, Game.tilesCollision);
+		Game.player2.update();
+		Game.player1.update();
+		fixCamera(Game);
 
 	},
 
 	render:function (Game) {
-
 	}
 
 }
+
+function fixCamera (Game) {
+	var angleBetween2Players 	= this.Game.physics.arcade.angleBetween(this.Game.player1.sprite,this.Game.player2.sprite);
+	var distanceBetween2Players = this.Game.physics.arcade.distanceBetween(this.Game.player1.sprite,this.Game.player2.sprite);
+	 Game.centerCamera.x = this.Game.player1.sprite.x + Math.cos(angleBetween2Players) * distanceBetween2Players * 0.5;
+	 Game.centerCamera.y = this.Game.player1.sprite.y + Math.sin(angleBetween2Players) * distanceBetween2Players * 0.5;
+
+
+	// if (distanceBetween2Players > 1000) {
+	// 	Game.world.scale.setTo(1000 / distanceBetween2Players);
+	// };
+
+}
+
+
+

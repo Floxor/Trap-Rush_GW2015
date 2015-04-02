@@ -25,8 +25,8 @@ TR_preload.prototype = {
 }
 
 function loadStart () {
-	this.game.load.tilemap('map', 'assets/tilemapN2.json', null, Phaser.Tilemap.TILED_JSON);
-    this.game.load.spritesheet('tilesetPlaceholder', 'assets/placeholders/tileset60x60.png');
+	this.game.load.tilemap('map', 'assets/test60tilemapN1.json', null, Phaser.Tilemap.TILED_JSON);
+    this.game.load.spritesheet('tilesetPlaceholder2', 'assets/placeholders/tileset60x60.png');
 	this.game.load.image('smoke', 'assets/particuleSmoke.png');
 	this.game.load.image('placeholder1', 'assets/placeholders/pic_cha.png');
 	this.game.load.image('placeholder2', 'assets/placeholders/pic_flo.png');
