@@ -1,25 +1,20 @@
 {
 	"playerTypes":{
 		"type1":{
-			"assetKey":"player1",
+			"assetKey":"placeholder3",
 			"gravity":3000,
-<<<<<<< HEAD
-			"speedX":850,
-			"speedUp":1200,
-			"speedDown":900,
-			"maxJumps":2
-=======
+			"scale":[1,1],
 			"speedX":750,
 			"speedUp":1000,
 			"type":"player",
 			"speedDown":750,
 			"maxJumps":2,
 			"punchPower": 750
->>>>>>> 49a80f0512e456eb46a566c3b5d07c50966d7781
 		},
 		"type2":{
 			"assetKey":"placeholder2",
 			"gravity":3000,
+			"scale":[0.5,0.5],
 			"type":"player",
 			"speedX":750,
 			"speedUp":1000,
@@ -30,34 +25,24 @@
 		"type4":{
 			"assetKey":"placeholder5",
 			"gravity":3000,
-<<<<<<< HEAD
-			"speedX":500,
-			"speedUp":1000,
-			"speedDown":500,
-			"maxJumps":2
-=======
+			"scale":[0.3,0.3],
 			"type":"object",
 			"speedX":750,
 			"speedUp":1000,
-			"speedDown":750,
+			"speedDown":200,
 			"maxJumps":2,
 			"punchPower": 750
->>>>>>> 49a80f0512e456eb46a566c3b5d07c50966d7781
 		},
 		"type3":{
 			"assetKey":"placeholder4",
 			"gravity":3000,
+			"scale":[0.5,0.5],
 			"speedX":750,
 			"type":"player",
 			"speedUp":1000,
-<<<<<<< HEAD
-			"speedDown":500,
-			"maxJumps":2
-=======
 			"speedDown":750,
 			"maxJumps":2,
 			"punchPower": 750
->>>>>>> 49a80f0512e456eb46a566c3b5d07c50966d7781
 		}
 	}
 }

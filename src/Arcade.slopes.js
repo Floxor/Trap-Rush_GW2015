@@ -2,7 +2,6 @@
 (function () {
 	'use strict';
     Phaser.Physics.Arcade.Body.prototype.velocityPunish = new Phaser.Point(0, 0);
-
 	Phaser.Physics.Arcade.prototype.collideSpriteVsTilemapLayer = function (sprite, tilemapLayer, collideCallback, processCallback, callbackContext) {
 		if (!sprite.body) {
 			return;
