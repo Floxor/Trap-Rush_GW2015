@@ -20,12 +20,17 @@ TR_start.prototype = {
 	},
 
 	create : function (Game) {
- 		console.log("start");
- 		Game.add.sprite(300,300,"placeholder1");
+		console.log("start");
+		
+		Game.add.sprite(300,300,"placeholder1");
+
+		Game.hud = new Hud(Game); //after the players creation
 	},
 
 	update: function(Game){
- 		console.log("update");
+		console.log("update");
+
+		Game.hud.update();
 	}
 
 }
