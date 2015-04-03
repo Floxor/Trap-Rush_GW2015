@@ -34,7 +34,7 @@ TR_start.prototype = {
 		Game.time.desiredFps = 50;
 		Game.physics.arcade.gravity.y = 0;
 		Game.map = Game.add.tilemap('map');
-		Game.map.addTilesetImage('collision', 'tilesetPlaceholder2');
+		Game.map.addTilesetImage('collision', 'tilesetPlaceholder');
 		Game.scale.compatibility.forceMinimumDocumentHeight = true
 	//	Game.add.plugin(Phaser.Plugin.Debug);
 		Game.map.layers.forEach(function(l){
