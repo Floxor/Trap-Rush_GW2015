@@ -31,7 +31,7 @@ TR_start.prototype = {
 		Game.input.gamepad.start()
 		Game.physics.startSystem(Phaser.Physics.ARCADE);
 		Game.stage.backgroundColor = '#38384B';
-		Game.time.desiredFps = 50;
+		Game.time.desiredFps = 60;
 		Game.physics.arcade.gravity.y = 0;
 		Game.map = Game.add.tilemap('map');
 		Game.map.addTilesetImage('collision', 'tilesetPlaceholder2');

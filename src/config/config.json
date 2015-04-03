@@ -1,13 +1,13 @@
 {
 	"playerTypes":{
 		"type1":{
-			"assetKey":"placeholder3",
+			"assetKey":"playerSpriteSheet",
 			"gravity":3000,
 			"scale":[1,1],
 			"speedX":750,
 			"speedUp":1000,
 			"type":"player",
-			"speedDown":750,
+			"speedDown":501,
 			"maxJumps":2,
 			"punchPower": 750
 		},
@@ -18,7 +18,7 @@
 			"type":"player",
 			"speedX":750,
 			"speedUp":1000,
-			"speedDown":750,
+			"speedDown":501,
 			"maxJumps":2,
 			"punchPower": 750
 		},
@@ -40,7 +40,7 @@
 			"speedX":750,
 			"type":"player",
 			"speedUp":1000,
-			"speedDown":750,
+			"speedDown":501,
 			"maxJumps":2,
 			"punchPower": 750
 		}
