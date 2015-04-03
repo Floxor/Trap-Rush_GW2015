@@ -16,8 +16,17 @@ function Lever(pParams) {
 
     this.doLoop = function () {
         var _this = this;
-        this.game.physics.arcade.overlap(this.sprite, this.game.player.sprite, function() {
-            _this.activation();
+        this.game.physics.arcade.overlap(this.sprite, this.game.player1.sprite, function() {
+            if (_this.game.player1.cursors.down.isDown) {
+                _this.activation();
+                _this.game.player1.killAnimation();
+            }
+        });
+        this.game.physics.arcade.overlap(this.sprite, this.game.player2.sprite, function() {
+            if (_this.game.player2.cursors.down.isDown) {
+                _this.activation();
+                _this.game.player2.killAnimation();
+            }
         });
     };
 
@@ -26,6 +35,7 @@ function Lever(pParams) {
 
 Lever.prototype.init = function() {
     this.sprite = this.game.add.sprite(this.x, this.y, 'lever', 0);
+    this.sprite.animations.add('lever');
     this.sprite.anchor.setTo(0, 1);
     this.game.physics.enable(this);
     this.game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
@@ -46,6 +56,7 @@ Lever.prototype.activation = function() {
 
 Lever.prototype.animation = function() {
     console.log('Animation du levier');
+    this.sprite.animations.play('lever', 20, false, false);
 };
 
 Lever.prototype.addLeverLoop = function() {
