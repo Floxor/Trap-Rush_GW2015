@@ -12,9 +12,9 @@
 			"punchPower": 750
 		},
 		"type2":{
-			"assetKey":"placeholder2",
+			"assetKey":"playerSpriteSheet2",
 			"gravity":3000,
-			"scale":[0.5,0.5],
+			"scale":[1,1],
 			"type":"player",
 			"speedX":750,
 			"speedUp":1000,
@@ -23,10 +23,10 @@
 			"punchPower": 750
 		},
 		"type3":{
-			"assetKey":"placeholder5",
+			"assetKey":"playerSpriteSheet3",
 			"gravity":3000,
-			"scale":[0.3,0.3],
-			"type":"object",
+			"scale":[1,1],
+			"type":"player",
 			"speedX":750,
 			"speedUp":1000,
 			"speedDown":200,
@@ -34,9 +34,9 @@
 			"punchPower": 750
 		},
 		"type4":{
-			"assetKey":"placeholder4",
+			"assetKey":"playerSpriteSheet4",
 			"gravity":3000,
-			"scale":[0.5,0.5],
+			"scale":[1,1],
 			"speedX":750,
 			"type":"player",
 			"speedUp":1000,

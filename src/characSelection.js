@@ -9,6 +9,7 @@ TR_selection.prototype = {
 		Game.input.gamepad.start();
 		this.gamepadActivatedP1 = false;
 		this.gamepadActivatedP2 = false;
+		Game.bg = Game.add.sprite(0,0, 'bgMenu');
 		titre = Game.add.text(600, 100, 'CHOISISSEZ UN PERSONNAGE');
 		titre.font = 'Calibri';
 		titre.fontSize = 80;
@@ -17,21 +18,25 @@ TR_selection.prototype = {
 
 		Game.carac1 = new buttonPerso(Game, 150, 200, "type1",1);
 		Game.carac2 = new buttonPerso(Game, 150, 300, "type2",1);
-		Game.carac3 = new buttonPerso(Game, 150, 400, "type3");
+		Game.carac3 = new buttonPerso(Game, 150, 400, "type3",1);
+		Game.carac7 = new buttonPerso(Game, 150, 500, "type4",1);
 		
 		Game.buttonsP1 = [];
 		Game.buttonsP1.push(Game.carac1);
 		Game.buttonsP1.push(Game.carac2);
 		Game.buttonsP1.push(Game.carac3);
+		Game.buttonsP1.push(Game.carac7);
 
 		Game.carac4 = new buttonPerso(Game, 900, 200, "type1",1);
 		Game.carac5 = new buttonPerso(Game, 900, 300, "type2",1);
 		Game.carac6 = new buttonPerso(Game, 900, 400, "type3",1);
+		Game.carac8 = new buttonPerso(Game, 900, 500, "type4",1);
 		
 		Game.buttonsP2 = [];
 		Game.buttonsP2.push(Game.carac1);
 		Game.buttonsP2.push(Game.carac2);
 		Game.buttonsP2.push(Game.carac3);
+		Game.buttonsP1.push(Game.carac8);
 
 		Game.selectedP1 = Game.buttonsP1[0];
 		Game.caracSelectedP1 = new buttonPerso(Game, 400, 300, Game.buttonsP1[0].name)
@@ -177,7 +182,7 @@ TR_selection.prototype = {
 
 		if(Game.jouerP1 == true && Game.jouerP2 == true)
 		{
-			jouerButton = Game.add.button(600, 600, 'button', jouer, this, 1,1,1);
+			jouerButton = Game.add.button(600, 600, 'buttonPlay', jouer, this, 1,1,1);
 			jouerButton.input.useHandCursor = true;
 			jouerButton.scale.setTo(1,0.6);
 			jouerButton.anchor.setTo(0.5,0.5);

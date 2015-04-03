@@ -5,8 +5,12 @@ function buttonPerso(Game, posX, posY, name, buttonNum)
 	this.y = posY;
 	this.name = name;
 	this.config = Game.config.playerTypes[name];
-	this.asset = this.config.assetKey;
-	this.buttonNum = this.config.assetKey;
+	if (this.config){
+		this.asset = this.config.assetKey;
+		this.buttonNum = this.config.assetKey;
+	}
+	else
+		this.asset = name;
 
 	this.graphics = Game.add.graphics(posX, posY);
 

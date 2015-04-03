@@ -28,6 +28,9 @@ function loadStart () {
 	this.game.load.tilemap('map', 'assets/tilemapN5.json', null, Phaser.Tilemap.TILED_JSON);
     this.game.load.spritesheet('tilesetPlaceholder', 'assets/tileset2.png');
     this.game.load.spritesheet('playerSpriteSheet', 'assets/sheets.png',154,115,-1,0,2);
+    this.game.load.spritesheet('playerSpriteSheet2', 'assets/sheetsplayer2.png',154,115,-1,0,2);
+    this.game.load.spritesheet('playerSpriteSheet3', 'assets/sheetsplayer3.png',154,115,-1,0,2);
+    this.game.load.spritesheet('playerSpriteSheet4', 'assets/sheetsplayer4.png',154,115,-1,0,2);
 	this.game.load.image('smoke', 'assets/particuleSmoke.png');
 	this.game.load.image('background1', 'assets/background_1.png');
 	this.game.load.image('placeholder1', 'assets/placeholders/pic_cha.png');
@@ -35,6 +38,7 @@ function loadStart () {
 	this.game.load.image('placeholder3', 'assets/placeholders/pic_maureen.png');
 	this.game.load.image('placeholder4', 'assets/placeholders/pic_nico.png');
 	this.game.load.image('placeholder5', 'assets/placeholders/pic_theo.png');
+	this.game.load.image('bgMenu', 'assets/ecran-personages.png');
 	this.game.load.spritesheet('player', 'assets/player.png',114,153);
 	this.game.load.spritesheet('jump', 'assets/saut.png',91,85);
 
@@ -48,7 +52,7 @@ function loadStart () {
 
 	this.game.load.bitmapFont('ratatouille', 'fonts/AuthenticRatatouille.otf');
 
-	this.game.load.image('button', 'assets/placeholders/button.png');
+	this.game.load.image('buttonPlay', 'assets/bouton-play.png');
 }
 
 function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles) {

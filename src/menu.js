@@ -8,23 +8,18 @@ TR_menu.prototype = {
 	create: function(Game){
 		Game.input.gamepad.start();
 		this.gamepadActivatedP1 = false;
+		Game.bg = Game.add.sprite(0,0, 'bgMenu');
 		titre = Game.add.text(600, 100, 'TRAP RUSH');
 		titre.font = 'Calibri';
 		titre.fontSize = 120;
 		titre.fill = '#EE4444';
 		titre.anchor.setTo(0.5,0.5);
 
-		jouerButton = Game.add.button(600, 500, 'button', selectionPerso, this, 1,1,1);
+		jouerButton = Game.add.button(600, 500, 'buttonPlay', selectionPerso, this, 1,1,1);
 		jouerButton.input.useHandCursor = true;
 		jouerButton.scale.setTo(1,0.6);
 		jouerButton.anchor.setTo(0.5,0.5);
-
-		jouerText = Game.add.text(590,490, 'Choisir un personnage');
-		jouerText.font = 'Arial';
-		jouerText.fontSize = 30;
-		jouerText.fill = "#000000";
-		jouerText.anchor.setTo(0.5,0.5);
-
+		
 		Game.valider = false;
 		
 		if(Game.input.gamepad.supported && Game.input.gamepad["pad1"]) {

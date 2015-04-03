@@ -123,14 +123,14 @@ TR_start.prototype = {
 
 		if(Game.physics.arcade.collide(Game.player1.sprite, Game.end.sprite))
 		{
-			Game.winner = Game.selectedP1.name;
+			Game.winner = Game.selectedP1.asset;
 			Game.textWinner = "Player 1 win !!"
 			Game.state.start("fin");
 		}
 
 		if(Game.physics.arcade.collide(Game.player2.sprite, Game.end.sprite))
 		{
-			Game.winner = Game.selectedP2.name;
+			Game.winner = Game.selectedP2.asset;
 			Game.textWinner = "Player 2 win !!"
 			Game.state.start("fin");
 		}
