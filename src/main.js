@@ -32,7 +32,7 @@ TR_start.prototype = {
 		Game.input.gamepad.start()
 		Game.physics.startSystem(Phaser.Physics.ARCADE);
 		Game.stage.backgroundColor = '#38384B';
-		Game.time.desiredFps = 50;
+		Game.time.desiredFps = 60;
 		Game.physics.arcade.gravity.y = 0;
 		Game.keys = Game.input.keyboard.createCursorKeys();
 		Game.map = Game.add.tilemap('map');
@@ -88,7 +88,7 @@ TR_start.prototype = {
 
 		Game.pickableGroup = [];
 		for (var i = 3 - 1; i >= 0; i--) {
-			Game.pickableGroup.push(new PickupElement([200 +i*250,100],Game,"placeholder3"));
+			Game.pickableGroup.push(new PickupElement([200 +i*250,100],Game,"type3"));
 		};
 		Game.shakeWorld = 0;
 		Game.camera.follow(Game.player1.sprite);

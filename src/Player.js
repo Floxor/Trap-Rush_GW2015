@@ -20,13 +20,15 @@ function Player (Game,type,pos,playerNumber) {
 	arrayPlayers.splice(arrayPlayers.indexOf(this.playerNumber),1);
 	this.opponentNumber = arrayPlayers[0];
 
+
+
+
 	this.sprite = Game.add.sprite(pos[0],pos[1],this.config.assetKey,0);
 	this.sprite.scale.setTo(this.config.scale[0],this.config.scale[1]);
 	Game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	this.sprite.body.bounce.y = 0;
 	this.sprite.body.gravity.y = this.config.gravity;
-	this.sprite.body.setSize(this.sprite.body.width * 0.8,this.sprite.body.height * 0.8,0,0);
-
+	this.sprite.body.setSize(50,75,0,0);
 	this.originalBody = {};
 	this.originalBody.width = this.sprite.body.width;
 	this.originalBody.height = this.sprite.body.height;
@@ -36,11 +38,15 @@ function Player (Game,type,pos,playerNumber) {
 	this.sprite.scale.setTo(this.config.scale[0],this.config.scale[1]);
 
 
-	this.sprite.animations.add('walk');
-
-/*
-	this.animations.add('left', [0, 1, 2, 3], 10, true);
-*/
+	this.sprite.animations.add("idle",[17,18,19,20,21,22,23,24,25,26,27,28,29]);
+	this.sprite.animations.add("jump",[0,1,2,3,4,5,6,7,8,9]);
+	this.sprite.animations.add("run",[34,35,36,37,38,39,40,41,42,43,44,45,46,47,48]);
+	this.sprite.animations.add("death",[51,52,53,54,55,56,57,58,59,60,61,62]);
+	this.sprite.animations.add("fall",[85,86,87,88,89,90,91,92,93,94,95,96,97,98,99]);
+	this.sprite.animations.add("roll",[102,103,104,105,106,107,108,109]);
+	this.sprite.animations.add("spin",[119,120,121,122,123,124,125,126,127,129,130,131,132,133,134,135]);
+	this.sprite.animations.add("slide",[136]);
+	this.sprite.animations.play("idle",24,true);
 
 	if(this.playerNumber == 1 && this.gamepadActivated == false){
 		this.cursors = {
@@ -119,16 +125,21 @@ Player.prototype.update = function () {
 		this.sprite.body.immovable = false;
 	}
 
+	if (this.isDead-- < 0 && this.sprite.alive == true) {
+		 this.respawn();
+	};
+
 	this.touchingWall = this.sprite.body.blocked.left || this.sprite.body.blocked.right;
 	this.sprite.scale.x = this.facingRight ? this.config.scale[0] : -this.config.scale[0];
 
-	if (this.slidding) {
+	if (this.slidding && this.sprite.body.blocked.down) {
 		this.deactivateMovementTime = 1;
 		if (this.sprite.body.velocity.x < -this.activeSpeedX  * 0.3)
 			this.sprite.body.velocity.x = (this.sprite.body.velocity.x).clamp(-this.activeSpeedX , -this.activeSpeedX  * 0.3);
 		else if (this.sprite.body.velocity.x > this.activeSpeedX  * 0.3)
 			this.sprite.body.velocity.x = (this.sprite.body.velocity.x).clamp(this.activeSpeedX  * 0.3, this.activeSpeedX );
 		this.sprite.body.setSize(this.originalBody.width,this.originalBody.height * 0.5,0,this.originalBody.height * 0.25);
+		this.sprite.animations.play("roll",24,true);
 	}
 	else if(this.cursors.down.realeased)
 		this.sprite.body.setSize(this.originalBody.width,this.originalBody.height,0,0);
@@ -136,26 +147,32 @@ Player.prototype.update = function () {
 	this.Game.debug.body(this.rectColli)
 	this.sprite.scale.x = this.facingRight ? this.config.scale[0] : -this.config.scale[0];
 
+	this.move();
 	if (!this.touchingWall) {
 		this.sprite.body.gravity.y = this.config.gravity;
 		if ((this.cursors.jump.isDown && this.sprite.body.onFloor()) || (this.cursors.jump.isDown && this.sprite.body.blocked.down))
 			this.jump();
-		else if (this.cursors.jump.isDown && this.numberJumpsLeft && this.sprite.body.velocity.y > -50){
+		else if (this.cursors.jump.isDown && this.numberJumpsLeft && this.sprite.body.velocity.y > -500){
 			this.numberJumpsLeft--;
 			this.jump();
+			this.sprite.animations.play("roll",24,true);
 		}
 		this.smokeEmitter.on = false;
 	}
 	else{
+		if (this.punchTimeout <= 0) 
+			this.sprite.animations.play("slide",24,true);
+
 		this.sprite.body.velocity.y = this.sprite.body.velocity.y.clamp(-this.config.speedUp,this.config.speedDown *0.25);
 		if ((this.cursors.jump.isDown && this.sprite.body.onFloor()) || (this.cursors.jump.isDown && this.sprite.body.blocked.down))
 			this.jump();
 		else if (this.cursors.jump.isDown){
 			this.numberJumpsLeft = this.config.maxJumps - 1;
+			this.facingRight = !this.facingRight;
 			this.launch(10,this.activeSpeedX   * (this.sprite.body.blocked.left - this.sprite.body.blocked.right) * 0.75,-this.config.speedUp);
 		}
-		if (!this.sprite.body.onFloor()) {
-			this.smokeEmitter.emitX = this.sprite.x + this.sprite.width * 0.5 + Math.random() * 20 - 10;
+		if (!this.sprite.body.blocked.down) {
+			this.smokeEmitter.emitX = this.sprite.x + this.sprite.body.width * 0.5 * this.sprite.scale.x + Math.random() * 20 - 10;
 			this.smokeEmitter.emitY = this.sprite.y + Math.random() * 20 - 10;
 			this.smokeEmitter.on = true;
 		};
@@ -163,7 +180,6 @@ Player.prototype.update = function () {
 
 	}
 
-	this.move();
 
 	if (this.grabTimeout-- < 0 && this.cursors.grab.isDown) 
 		this.grab();
@@ -172,6 +188,14 @@ Player.prototype.update = function () {
 	this.sprite.body.velocity.y = (this.sprite.body.velocity.y).clamp(-this.config.speedUp,this.config.speedDown);
 	this.rectColli.x = this.sprite.x + this.sprite.width * 0.5 + this.rectColli.width * (this.facingRight - 0.5);
 	this.rectColli.y = this.sprite.y;
+
+	if (this.sprite.body.velocity.y > 500 && this.sprite.animations.currentAnim.name != "fall" && this.punchTimeout <= 0 && !this.touchingWall) {
+		this.sprite.animations.play("fall",24,false);
+	};
+	if (this.punchTimeout > 0 && this.sprite.animations.currentAnim.name != "spin") {
+		this.sprite.animations.play("spin",24,false);
+	}
+
 }
 
 Player.prototype.grab = function() {
@@ -205,10 +229,7 @@ Player.prototype.grab = function() {
 }
 
 Player.prototype.punch = function() {
-	/*
-		AnimPunch !
-	*/
-	
+	this.sprite.animations.play("spin",24,false);
 		if (this.Game.physics.arcade.overlap(this.rectColli,this.Game["player"+this.opponentNumber].sprite)) {
 			var angle = this.Game.physics.arcade.angleBetween(this.sprite,this.Game["player"+this.opponentNumber].sprite);
 
@@ -218,6 +239,7 @@ Player.prototype.punch = function() {
 }
 
 Player.prototype.launch = function(timeStunned,forceX,forceY) {
+	this.sprite.animations.play("jump",24,true);
 	this.deactivateMovementTime = timeStunned;
 	this.sprite.body.velocity.x = forceX;
 	this.sprite.body.velocity.y = forceY;
@@ -254,7 +276,8 @@ Player.prototype.move = function() {
 	//	this.Game.physics.arcade.collide(this.Game.player1.sprite,this.Game.player2.sprite);
 
  	if (this.cursors.left.isDown){
- 		this.sprite.animations.play('walk', 30, true);
+ 		if (this.sprite.body.blocked.down) 
+			this.sprite.animations.play("run",24,true);
 		this.facingRight = false;
 		if (this.gamepadActivated) 
 			this.sprite.body.velocity.x = (this.sprite.body.velocity.x - this.activeSpeedX  * this.acceleration * Math.abs(this.Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0])).clamp(-this.activeSpeedX , 10000);
@@ -262,7 +285,8 @@ Player.prototype.move = function() {
 			this.sprite.body.velocity.x = (this.sprite.body.velocity.x - this.activeSpeedX  * this.acceleration).clamp(-this.activeSpeedX , 10000);
  	}
 	else if (this.cursors.right.isDown){
-		this.sprite.animations.play('walk', 30, true);
+ 		if (this.sprite.body.blocked.down) 
+			this.sprite.animations.play("run",24,true);
 		this.facingRight = true;
 		if (this.gamepadActivated) 
 			this.sprite.body.velocity.x = (this.sprite.body.velocity.x + this.activeSpeedX  * this.acceleration * Math.abs(this.Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0])).clamp(-10000, this.activeSpeedX );
@@ -270,6 +294,8 @@ Player.prototype.move = function() {
 			this.sprite.body.velocity.x = (this.sprite.body.velocity.x + this.activeSpeedX  * this.acceleration).clamp(-10000, this.activeSpeedX );
 	}
 	else if (this.sprite.body.onFloor() || this.sprite.body.blocked.down){
+		if (this.punchTimeout <= 0) 
+			this.sprite.animations.play("idle",24,true);
 		this.sprite.body.velocity.x = this.sprite.body.velocity.x * 0.25;
 	}
 	else
@@ -281,9 +307,26 @@ Player.prototype.move = function() {
 };
 
 Player.prototype.jump = function() {
-	if (this.deactivateMovementTime <= 0)
+	if (this.deactivateMovementTime <= 0){
+		this.sprite.animations.play("jump",24,true);
 		this.sprite.body.velocity.y = -this.config.speedUp;
+	}
+
 };
+
+
+Player.prototype.killAnimation = function () {
+	this.sprite.animations.play("death",24,false,true);
+
+	this.frozen = this.isDead = 60;
+	
+}
+
+Player.prototype.respawn = function () {
+	this.sprite.revive();
+	this.sprite.x = this.Game["player"+this.opponentNumber].sprite.x;
+	this.sprite.y = this.Game["player"+this.opponentNumber].sprite.y;
+}
 
 
 function StaticBot (pos,Game,type) {
@@ -356,6 +399,10 @@ PickupElement.prototype.update = function () {
 
 
 PickupElement.prototype.throw = function(target,forceX,forceY) {
+	if (!this.sprite.body){
+		this.sprite.kill();
+		return;
+	}
 	this.targetPlayer 			= target;
 	this.thrown 				= true;
 	this.sprite.body.velocity.x = forceX;
