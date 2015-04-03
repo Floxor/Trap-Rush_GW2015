@@ -29,6 +29,8 @@ TR_start.prototype = {
 	},
 
 	create : function (Game) {
+        Game.background = Game.add.tileSprite(0,0,Game.cache.getImage("background1").width,Game.height,"background1");
+        Game.background.fixedToCamera  = true;
 		Game.input.gamepad.start()
 		Game.physics.startSystem(Phaser.Physics.ARCADE);
 		Game.stage.backgroundColor = '#38384B';
@@ -38,7 +40,6 @@ TR_start.prototype = {
 		Game.map = Game.add.tilemap('map');
 		Game.map.addTilesetImage('collision', 'tilesetPlaceholder');
 		Game.scale.compatibility.forceMinimumDocumentHeight = true
-	//	Game.add.plugin(Phaser.Plugin.Debug);
 		Game.map.layers.forEach(function(l){
 			var layer=Game.map.createLayer(l.name);
 		
@@ -91,12 +92,11 @@ TR_start.prototype = {
 			Game.pickableGroup.push(new PickupElement([200 +i*250,100],Game,"type3"));
 		};
 		Game.shakeWorld = 0;
-		Game.camera.follow(Game.player1.sprite);
 
 		Game.end = new Fin(Game, 3650, 250);
 
 		Game.centerCamera = Game.add.sprite(0,0,null);
-		Game.camera.follow(Game.player1.sprite);
+		Game.camera.follow(Game.centerCamera);
 	},
 
 	update: function(Game){
@@ -124,7 +124,6 @@ TR_start.prototype = {
 		if(Game.physics.arcade.collide(Game.player1.sprite, Game.end.sprite))
 		{
 			Game.winner = Game.selectedP1.name;
-			console.log(Game.winner);
 			Game.textWinner = "Player 1 win !!"
 			Game.state.start("fin");
 		}
@@ -132,7 +131,6 @@ TR_start.prototype = {
 		if(Game.physics.arcade.collide(Game.player2.sprite, Game.end.sprite))
 		{
 			Game.winner = Game.selectedP2.name;
-			console.log(Game.winner);
 			Game.textWinner = "Player 2 win !!"
 			Game.state.start("fin");
 		}
@@ -157,8 +155,9 @@ function victoire(Game)
 function fixCamera (Game) {
 	var angleBetween2Players 	= this.Game.physics.arcade.angleBetween(this.Game.player1.sprite,this.Game.player2.sprite);
 	var distanceBetween2Players = this.Game.physics.arcade.distanceBetween(this.Game.player1.sprite,this.Game.player2.sprite);
-	 Game.centerCamera.x = this.Game.player1.sprite.x + Math.cos(angleBetween2Players) * distanceBetween2Players * 0.5;
-	 Game.centerCamera.y = this.Game.player1.sprite.y + Math.sin(angleBetween2Players) * distanceBetween2Players * 0.5;
+	Game.centerCamera.x = this.Game.player1.sprite.x + Math.cos(angleBetween2Players) * distanceBetween2Players * 0.5;
+	Game.centerCamera.y = this.Game.player1.sprite.y + Math.sin(angleBetween2Players) * distanceBetween2Players * 0.5;
+	Game.background.tilePosition.set(-Game.camera.x * 0.1, 0);
 }
 
 

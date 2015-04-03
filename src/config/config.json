@@ -22,7 +22,7 @@
 			"maxJumps":2,
 			"punchPower": 750
 		},
-		"type4":{
+		"type3":{
 			"assetKey":"placeholder5",
 			"gravity":3000,
 			"scale":[0.3,0.3],
@@ -33,7 +33,7 @@
 			"maxJumps":2,
 			"punchPower": 750
 		},
-		"type3":{
+		"type4":{
 			"assetKey":"placeholder4",
 			"gravity":3000,
 			"scale":[0.5,0.5],

@@ -15,18 +15,18 @@ TR_selection.prototype = {
 		titre.fill = '#EE4444';
 		titre.anchor.setTo(0.5,0.5);
 
-		Game.carac1 = new buttonPerso(Game, 150, 200, "placeholder1",1);
-		Game.carac2 = new buttonPerso(Game, 150, 300, "placeholder2",1);
-		Game.carac3 = new buttonPerso(Game, 150, 400, "placeholder3");
+		Game.carac1 = new buttonPerso(Game, 150, 200, "type1",1);
+		Game.carac2 = new buttonPerso(Game, 150, 300, "type2",1);
+		Game.carac3 = new buttonPerso(Game, 150, 400, "type3");
 		
 		Game.buttonsP1 = [];
 		Game.buttonsP1.push(Game.carac1);
 		Game.buttonsP1.push(Game.carac2);
 		Game.buttonsP1.push(Game.carac3);
 
-		Game.carac4 = new buttonPerso(Game, 900, 200, "placeholder1",1);
-		Game.carac5 = new buttonPerso(Game, 900, 300, "placeholder2",1);
-		Game.carac6 = new buttonPerso(Game, 900, 400, "placeholder3",1);
+		Game.carac4 = new buttonPerso(Game, 900, 200, "type1",1);
+		Game.carac5 = new buttonPerso(Game, 900, 300, "type2",1);
+		Game.carac6 = new buttonPerso(Game, 900, 400, "type3",1);
 		
 		Game.buttonsP2 = [];
 		Game.buttonsP2.push(Game.carac1);
@@ -158,7 +158,6 @@ TR_selection.prototype = {
 		if(!this.cursorsP1.valider.isDown)
 			Game.valider = false;
 
-		console.log(Game.valider);
 
 		if(this.cursorsP1.valider.isDown && Game.validerP1 == false && Game.valider == false && Game.jouerP1 == false)
 		{

@@ -4,6 +4,7 @@ function Player (Game,type,pos,playerNumber) {
 
 	this.Game 						= Game;
 	this.config 					= Game.config.playerTypes[type];
+	console.log(type)
 	this.numberJumpsLeft 			= 0;
 	this.deactivateMovementTime 	= 0;
 	this.facingRight			 	= true;
@@ -48,31 +49,16 @@ function Player (Game,type,pos,playerNumber) {
 	this.sprite.animations.add("slide",[136]);
 	this.sprite.animations.play("idle",24,true);
 
-	if(this.playerNumber == 1 && this.gamepadActivated == false){
-		this.cursors = {
-			jump 	: Game.input.keyboard.addKey(Phaser.Keyboard.Z),
-			left 	: Game.input.keyboard.addKey(Phaser.Keyboard.Q),
-			right 	: Game.input.keyboard.addKey(Phaser.Keyboard.D),
-			down    : Game.input.keyboard.addKey(Phaser.Keyboard.DOWN),
-			grab 	: Game.input.keyboard.addKey(Phaser.Keyboard.B),
-			punch 	: Game.input.keyboard.addKey(Phaser.Keyboard.V)
-		};
-	}
-	else if(this.playerNumber == 2 && this.gamepadActivated == false){
-		this.cursors = {
-			jump 	: Game.input.keyboard.addKey(Phaser.Keyboard.UP),
-			left 	: Game.input.keyboard.addKey(Phaser.Keyboard.LEFT),
-			right 	: Game.input.keyboard.addKey(Phaser.Keyboard.RIGHT),
-			down    : Game.input.keyboard.addKey(Phaser.Keyboard.DOWN),
-			grab 	: Game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_3),
-			punch 	: Game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_2)
-		};
-	}
-		
-	if(Game.input.gamepad.supported && Game.input.gamepad["pad"+playerNumber]) {
-		if(Game.input.gamepad["pad"+playerNumber]._rawPad)
-			this.gamepadActivated = true;
-	}
+
+	this.cursors = {
+		jump 	: Game.input.keyboard.addKey(Phaser.Keyboard.Z),
+		left 	: Game.input.keyboard.addKey(Phaser.Keyboard.Q),
+		right 	: Game.input.keyboard.addKey(Phaser.Keyboard.D),
+		down    : Game.input.keyboard.addKey(Phaser.Keyboard.DOWN),
+		grab 	: Game.input.keyboard.addKey(Phaser.Keyboard.B),
+		punch 	: Game.input.keyboard.addKey(Phaser.Keyboard.V)
+	};
+	
 
 
 	this.smokeEmitter = Game.add.emitter(Game.world.centerX, Game.world.height *0.5, Game.world.width * 0.5);
@@ -100,13 +86,15 @@ function Player (Game,type,pos,playerNumber) {
 
 
 Player.prototype.update = function () {
-
-	this.cursors.left.isDown 	= this.gamepadActivated ? 	Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0] < -0.3 : this.cursors.left.isDown;
-	this.cursors.right.isDown 	= this.gamepadActivated ?  	Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0] >  0.3 : this.cursors.right.isDown;
-	this.cursors.jump.isDown 	= this.gamepadActivated ? 	Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_A,50) : this.cursors.jump.downDuration();
-	this.cursors.grab.isDown 	= this.gamepadActivated ?  	Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_Y,50) : this.cursors.grab.downDuration();
-	this.cursors.punch.isDown 	= this.gamepadActivated ?  	Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_X,50) : this.cursors.punch.downDuration();
-
+    this.gamepadActivated = this.Game.input.gamepad["pad"+this.playerNumber] ? this.Game.input.gamepad["pad"+this.playerNumber]._rawPad : false;
+   	
+   	if (this.Game.input.gamepad["pad"+this.playerNumber]._rawPad) {
+		this.cursors.left.isDown 	= this.gamepadActivated ? 	Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0] < -0.3 : this.cursors.left.isDown;
+		this.cursors.right.isDown 	= this.gamepadActivated ?  	Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0] >  0.3 : this.cursors.right.isDown;
+		this.cursors.jump.isDown 	= this.gamepadActivated ? 	Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_A,50) : this.cursors.jump.downDuration();
+		this.cursors.grab.isDown 	= this.gamepadActivated ?  	Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_Y,50) : this.cursors.grab.downDuration();
+		this.cursors.punch.isDown 	= this.gamepadActivated ?  	Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_X,50) : this.cursors.punch.downDuration();
+	}
 	this.sprite.body.velocity.x = Math.abs(this.sprite.body.velocity.x) < 1? 0 : this.sprite.body.velocity.x;
 	this.sprite.body.velocity.y = Math.abs(this.sprite.body.velocity.y) < 1? 0 : this.sprite.body.velocity.y;
 
