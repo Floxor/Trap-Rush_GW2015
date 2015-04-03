@@ -34,9 +34,20 @@ function loadStart () {
 	this.game.load.image('placeholder3', 'assets/placeholders/pic_maureen.png');
 	this.game.load.image('placeholder4', 'assets/placeholders/pic_nico.png');
 	this.game.load.image('placeholder5', 'assets/placeholders/pic_theo.png');
+	this.game.load.spritesheet('player', 'assets/player.png',114,153);
+	this.game.load.spritesheet('jump', 'assets/saut.png',91,85);
 
-	this.game.load.image('bloc', 'assets/placeholders/Bloc.png');
+    //traps
+    this.game.load.image('trap_pikes', 'assets/traps/pikes.png');
+    this.game.load.image('trap_knifes', 'assets/traps/knife.png');
+    this.game.load.image('trap_bigball', 'assets/traps/bigball.png');
+    this.game.load.image('trap_pikeswall', 'assets/traps/pikeswall.png');
+    this.game.load.image('trap_fireball', 'assets/traps/fireball.png');
+    this.game.load.image('lever', 'assets/traps/lever.png');
 
+	this.game.load.bitmapFont('ratatouille', 'fonts/AuthenticRatatouille.otf');
+
+	this.game.load.image('button', 'assets/placeholders/button.png');
 }
 
 function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles) {
@@ -44,5 +55,5 @@ function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles) {
 }
 
 function loadComplete () {
-	this.game.state.start("debug");
+	this.game.state.start("menu");
 }

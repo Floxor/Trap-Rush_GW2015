@@ -9,6 +9,7 @@ function Player (Game,type,pos,playerNumber) {
 	this.facingRight			 	= true;
 	this.touchingWall 				= false;
 	this.slidding 					= false;
+	this.touchingGround				= false;
 	this.acceleration 				= 0.1;
 	this.frozen 					= 60;
 	this.punchTimeout 				= 0;
@@ -20,10 +21,12 @@ function Player (Game,type,pos,playerNumber) {
 	this.opponentNumber = arrayPlayers[0];
 
 	this.sprite = Game.add.sprite(pos[0],pos[1],this.config.assetKey,0);
+	this.sprite.scale.setTo(this.config.scale[0],this.config.scale[1]);
 	Game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	this.sprite.body.bounce.y = 0;
 	this.sprite.body.gravity.y = this.config.gravity;
 	this.sprite.body.setSize(this.sprite.body.width * 0.8,this.sprite.body.height * 0.8,0,0);
+
 	this.originalBody = {};
 	this.originalBody.width = this.sprite.body.width;
 	this.originalBody.height = this.sprite.body.height;
@@ -32,20 +35,38 @@ function Player (Game,type,pos,playerNumber) {
 	this.sprite.anchor.setTo(0.5,0.5);
 	this.sprite.scale.setTo(this.config.scale[0],this.config.scale[1]);
 
+
+	this.sprite.animations.add('walk');
+
 /*
 	this.animations.add('left', [0, 1, 2, 3], 10, true);
 */
 
-	this.cursors = {
-		jump 	: Game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR),
-		left 	: Game.input.keyboard.addKey(Phaser.Keyboard.Q),
-		right 	: Game.input.keyboard.addKey(Phaser.Keyboard.D),
-		down 	: Game.input.keyboard.addKey(Phaser.Keyboard.S),
-		grab 	: Game.input.keyboard.addKey(Phaser.Keyboard.G),
-		punch 	: Game.input.keyboard.addKey(Phaser.Keyboard.P)
-	};
-
-	this.gamepadActivated = Game.input.gamepad["pad"+playerNumber] ? Game.input.gamepad["pad"+playerNumber]._rawPad : false;
+	if(this.playerNumber == 1 && this.gamepadActivated == false){
+		this.cursors = {
+			jump 	: Game.input.keyboard.addKey(Phaser.Keyboard.Z),
+			left 	: Game.input.keyboard.addKey(Phaser.Keyboard.Q),
+			right 	: Game.input.keyboard.addKey(Phaser.Keyboard.D),
+			down    : Game.input.keyboard.addKey(Phaser.Keyboard.DOWN),
+			grab 	: Game.input.keyboard.addKey(Phaser.Keyboard.B),
+			punch 	: Game.input.keyboard.addKey(Phaser.Keyboard.V)
+		};
+	}
+	else if(this.playerNumber == 2 && this.gamepadActivated == false){
+		this.cursors = {
+			jump 	: Game.input.keyboard.addKey(Phaser.Keyboard.UP),
+			left 	: Game.input.keyboard.addKey(Phaser.Keyboard.LEFT),
+			right 	: Game.input.keyboard.addKey(Phaser.Keyboard.RIGHT),
+			down    : Game.input.keyboard.addKey(Phaser.Keyboard.DOWN),
+			grab 	: Game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_3),
+			punch 	: Game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_2)
+		};
+	}
+		
+	if(Game.input.gamepad.supported && Game.input.gamepad["pad"+playerNumber]) {
+		if(Game.input.gamepad["pad"+playerNumber]._rawPad)
+			this.gamepadActivated = true;
+	}
 
 
 	this.smokeEmitter = Game.add.emitter(Game.world.centerX, Game.world.height *0.5, Game.world.width * 0.5);
@@ -62,6 +83,7 @@ function Player (Game,type,pos,playerNumber) {
 
 	this.rectColli = Game.add.sprite(0, 0, null);
 	Game.physics.enable(this.rectColli, Phaser.Physics.ARCADE);
+
 	this.rectColli.body.setSize(100, 125, 0, 0);
 	this.rectColli.anchor.setTo(0.5, 0.5);
 
@@ -73,20 +95,15 @@ function Player (Game,type,pos,playerNumber) {
 
 Player.prototype.update = function () {
 
-	this.gamepadActivated = this.Game.input.gamepad["pad"+this.playerNumber] ? this.Game.input.gamepad["pad"+this.playerNumber]._rawPad : false;
+	this.cursors.left.isDown 	= this.gamepadActivated ? 	Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0] < -0.3 : this.cursors.left.isDown;
+	this.cursors.right.isDown 	= this.gamepadActivated ?  	Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0] >  0.3 : this.cursors.right.isDown;
+	this.cursors.jump.isDown 	= this.gamepadActivated ? 	Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_A,50) : this.cursors.jump.downDuration();
+	this.cursors.grab.isDown 	= this.gamepadActivated ?  	Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_Y,50) : this.cursors.grab.downDuration();
+	this.cursors.punch.isDown 	= this.gamepadActivated ?  	Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_X,50) : this.cursors.punch.downDuration();
 
 	this.sprite.body.velocity.x = Math.abs(this.sprite.body.velocity.x) < 1? 0 : this.sprite.body.velocity.x;
 	this.sprite.body.velocity.y = Math.abs(this.sprite.body.velocity.y) < 1? 0 : this.sprite.body.velocity.y;
 
-	if (this.Game.input.gamepad["pad"+this.playerNumber]._rawPad) {
-		this.cursors.left.isDown 	= this.gamepadActivated ? this.Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0] < -0.3 : this.cursors.left.isDown;
-		this.cursors.right.isDown 	= this.gamepadActivated ? this.Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0] >  0.3 : this.cursors.right.isDown;
-		this.cursors.down.isDown 	= this.gamepadActivated ? this.Game.input.gamepad["pad"+this.playerNumber].isDown(Phaser.Gamepad.XBOX360_B) : this.cursors.down.isDown;
-		this.cursors.down.realeased = this.gamepadActivated ? this.Game.input.gamepad["pad"+this.playerNumber].isUp(Phaser.Gamepad.XBOX360_B) : this.cursors.down.upDuration();
-		this.cursors.jump.isDown 	= this.gamepadActivated ? this.Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_A,50) : this.cursors.jump.downDuration();
-		this.cursors.grab.isDown 	= this.gamepadActivated ? this.Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_Y,50) : this.cursors.grab.downDuration();
-		this.cursors.punch.isDown 	= this.gamepadActivated ? this.Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_X,50) : this.cursors.punch.downDuration();
-	}	
 
 	this.slidding = this.cursors.down.isDown;
 	
@@ -116,6 +133,8 @@ Player.prototype.update = function () {
 	else if(this.cursors.down.realeased)
 		this.sprite.body.setSize(this.originalBody.width,this.originalBody.height,0,0);
 
+	this.Game.debug.body(this.rectColli)
+	this.sprite.scale.x = this.facingRight ? this.config.scale[0] : -this.config.scale[0];
 
 	if (!this.touchingWall) {
 		this.sprite.body.gravity.y = this.config.gravity;
@@ -140,6 +159,8 @@ Player.prototype.update = function () {
 			this.smokeEmitter.emitY = this.sprite.y + Math.random() * 20 - 10;
 			this.smokeEmitter.on = true;
 		};
+
+
 	}
 
 	this.move();
@@ -200,6 +221,22 @@ Player.prototype.launch = function(timeStunned,forceX,forceY) {
 	this.deactivateMovementTime = timeStunned;
 	this.sprite.body.velocity.x = forceX;
 	this.sprite.body.velocity.y = forceY;
+	/*
+		AnimPunch !
+	*/
+	
+		if (this.Game.physics.arcade.overlap(this.rectColli,this.Game["player"+this.opponentNumber].sprite)) {
+			var angle = this.Game.physics.arcade.angleBetween(this.sprite,this.Game["player"+this.opponentNumber].sprite);
+
+			this.Game["player"+this.opponentNumber].launch(15,this.config.punchPower * Math.cos(angle) *0.5,  - 300 + this.config.punchPower * Math.sin(angle));
+		};	
+	this.punchTimeout = 30;
+}
+
+Player.prototype.launch = function(timeStunned,forceX,forceY) {
+	this.deactivateMovementTime = timeStunned;
+	this.sprite.body.velocity.x = forceX;
+	this.sprite.body.velocity.y = forceY;
 }
 
 
@@ -207,11 +244,17 @@ Player.prototype.launch = function(timeStunned,forceX,forceY) {
 Player.prototype.move = function() {
 	if (this.deactivateMovementTime-- >= 0)
 		return
+
+	if(this.cursors.left.isUp && this.cursors.right.isUp)
+	{
+		this.sprite.animations.stop('walk');
+	}
 	
 	//if (this.Game["player"+this.opponentNumber].deactivateMovementTime <= 0)
 	//	this.Game.physics.arcade.collide(this.Game.player1.sprite,this.Game.player2.sprite);
 
  	if (this.cursors.left.isDown){
+ 		this.sprite.animations.play('walk', 30, true);
 		this.facingRight = false;
 		if (this.gamepadActivated) 
 			this.sprite.body.velocity.x = (this.sprite.body.velocity.x - this.activeSpeedX  * this.acceleration * Math.abs(this.Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0])).clamp(-this.activeSpeedX , 10000);
@@ -219,6 +262,7 @@ Player.prototype.move = function() {
 			this.sprite.body.velocity.x = (this.sprite.body.velocity.x - this.activeSpeedX  * this.acceleration).clamp(-this.activeSpeedX , 10000);
  	}
 	else if (this.cursors.right.isDown){
+		this.sprite.animations.play('walk', 30, true);
 		this.facingRight = true;
 		if (this.gamepadActivated) 
 			this.sprite.body.velocity.x = (this.sprite.body.velocity.x + this.activeSpeedX  * this.acceleration * Math.abs(this.Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0])).clamp(-10000, this.activeSpeedX );
@@ -281,6 +325,20 @@ PickupElement.prototype.update = function () {
 			this.Game.pickableGroup.splice(this.Game.pickableGroup.indexOf(this),1);
 		};
 		return;
+	}
+
+	this.sprite.body.velocity.x = this.sprite.body.velocity.x * 0.8;
+	if (this.Game.physics.arcade.overlap(this.sprite,this.Game.player1.sprite,null) || this.Game.physics.arcade.overlap(this.sprite,this.Game.player2.sprite,null)) {
+		if (this.thrown) {
+			this.sprite.outOfBoundsKill = true;
+			if (this.Game.physics.arcade.overlap(this.sprite,this.targetPlayer.sprite)) {
+				var angle = this.Game.physics.arcade.angleBetween(this.pickedBy.sprite,this.Game["player"+this.opponentNumber].sprite);
+				this.targetPlayer.launch(90,10 * Math.cos(angle), 300 * Math.sin(angle));
+				this.sprite.destroy();
+				this.Game.pickableGroup.splice(this.Game.pickableGroup.indexOf(this),1);
+			};
+			return;
+		}
 	};
 	this.sprite.body.velocity.x = this.sprite.body.velocity.x * 0.97;
 	this.sprite.body.velocity.y = (this.sprite.body.velocity.y).clamp(-this.config.speedUp,this.config.speedDown);

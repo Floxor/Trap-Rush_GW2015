@@ -13,7 +13,10 @@ function init(){
 	//Game = new Phaser.Game(1440, 864, Phaser.AUTO, 'gameContainer');
 	Game = new Phaser.Game(1200, 720, Phaser.CANVAS, 'gameContainer', null, false, null);
 	Game.state.add('preload' , TR_preload);
+	Game.state.add('menu', TR_menu);
+	Game.state.add('selection', TR_selection);
 	Game.state.add('debug' , TR_start);
+	Game.state.add('fin', TR_end);
 	Game.state.start('preload');
 }
 
@@ -26,13 +29,12 @@ TR_start.prototype = {
 	},
 
 	create : function (Game) {
-		Game.background = Game.add.tileSprite(0,0,Game.cache.getImage("background1").width,Game.height,"background1");
-		Game.background.fixedToCamera  = true;
 		Game.input.gamepad.start()
 		Game.physics.startSystem(Phaser.Physics.ARCADE);
 		Game.stage.backgroundColor = '#38384B';
 		Game.time.desiredFps = 50;
 		Game.physics.arcade.gravity.y = 0;
+		Game.keys = Game.input.keyboard.createCursorKeys();
 		Game.map = Game.add.tilemap('map');
 		Game.map.addTilesetImage('collision', 'tilesetPlaceholder');
 		Game.scale.compatibility.forceMinimumDocumentHeight = true
@@ -68,7 +70,7 @@ TR_start.prototype = {
 
 				Game.tilesCollision=layer;
 			}
-
+			Game.lol = true;
 			
 			layer.resizeWorld();
 		}, Game);
@@ -79,18 +81,22 @@ TR_start.prototype = {
 		console.log("start");
 
 		Game.bots = [];
-		Game.player1 = new Player(Game,"type1",[150,150],1);
-		Game.player2 = new Player(Game,"type3",[250,150],2);
+		Game.winner = null;
+
+		Game.player1 = new Player(Game,Game.selectedP1.name,[150,600],1);
+		Game.player2 = new Player(Game,Game.selectedP2.name,[250,600],2);
+
 		Game.pickableGroup = [];
 		for (var i = 3 - 1; i >= 0; i--) {
-			Game.pickableGroup.push(new PickupElement([500 +i*50,100],Game,"type4"));
+			Game.pickableGroup.push(new PickupElement([200 +i*250,100],Game,"placeholder3"));
 		};
-
-//		Game.plateforms = [];
-//		creerPlateform(Game);
 		Game.shakeWorld = 0;
+		Game.camera.follow(Game.player1.sprite);
+
+		Game.end = new Fin(Game, 3650, 250);
+
 		Game.centerCamera = Game.add.sprite(0,0,null);
-		Game.camera.follow(Game.centerCamera);
+		Game.camera.follow(Game.player1.sprite);
 	},
 
 	update: function(Game){
@@ -105,7 +111,6 @@ TR_start.prototype = {
 		    }
 		}
 
-
 		for (var i = Game.bots.length - 1; i >= 0; i--) {
 			Game.bots[i].update();
 		};
@@ -116,12 +121,27 @@ TR_start.prototype = {
 			Game.pickableGroup[i].update();
 		};
 
+		if(Game.physics.arcade.collide(Game.player1.sprite, Game.end.sprite))
+		{
+			Game.winner = Game.selectedP1.name;
+			console.log(Game.winner);
+			Game.textWinner = "Player 1 win !!"
+			Game.state.start("fin");
+		}
+
+		if(Game.physics.arcade.collide(Game.player2.sprite, Game.end.sprite))
+		{
+			Game.winner = Game.selectedP2.name;
+			console.log(Game.winner);
+			Game.textWinner = "Player 2 win !!"
+			Game.state.start("fin");
+		}
+
 		Game.physics.arcade.collideSpriteVsTilemapLayer(Game.player1.sprite, Game.tilesCollision);
 		Game.physics.arcade.collideSpriteVsTilemapLayer(Game.player2.sprite, Game.tilesCollision);
 		Game.player2.update();
 		Game.player1.update();
 		fixCamera(Game);
-
 	},
 
 	render:function (Game) {
@@ -129,16 +149,16 @@ TR_start.prototype = {
 
 }
 
+function victoire(Game)
+{
+	
+}
+
 function fixCamera (Game) {
 	var angleBetween2Players 	= this.Game.physics.arcade.angleBetween(this.Game.player1.sprite,this.Game.player2.sprite);
 	var distanceBetween2Players = this.Game.physics.arcade.distanceBetween(this.Game.player1.sprite,this.Game.player2.sprite);
 	 Game.centerCamera.x = this.Game.player1.sprite.x + Math.cos(angleBetween2Players) * distanceBetween2Players * 0.5;
 	 Game.centerCamera.y = this.Game.player1.sprite.y + Math.sin(angleBetween2Players) * distanceBetween2Players * 0.5;
-	Game.background.tilePosition.set(-Game.camera.x * 0.1, 0);
-	// if (distanceBetween2Players > 1000) {
-	// 	Game.world.scale.setTo(1000 / distanceBetween2Players);
-	// };
-
 }
 
 
