@@ -114,6 +114,28 @@ TR_start.prototype = {
         Game.stageEdges.left.anchor.setTo(1, 0);
 		Game.stageEdges.top.anchor.setTo(0, 1);
 
+		var trap = new Pikes({
+			x: 800,
+			y: 1400,
+			game: Game,
+			quantity: 3
+		});
+
+		var trap1 = new Lever({
+			x: 400,
+			y: 1500,
+			game: Game,
+			callBack: function() {
+				new Knifes({
+					game: Game,
+					x: 500,
+					y: 1400
+				});
+			},
+			trap: trap
+
+		});
+
 	},
 
 	update: function(Game){

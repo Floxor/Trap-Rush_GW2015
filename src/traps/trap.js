@@ -6,7 +6,8 @@ function Trap(pParams) {
     this.x = pParams.x;
     this.y = pParams.y;
     if (pParams.sprite) {
-        this.sprite = Game.add.sprite(this.x, this.y, pParams.sprite, 0);
+        this.sprite = this.game.add.sprite(this.x, this.y, pParams.sprite, 0);
+        this.sprite.animations.add(pParams.sprite);
         this.game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
         this.sprite.body.allowGravity = false;
     }

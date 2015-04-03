@@ -62,6 +62,10 @@ Fireball.prototype.constructor = Fireball;
 Fireball.prototype = Object.create(Trap.prototype);
 
 Fireball.prototype.init = function () {
+    //animation
+    this.sprite.animations.add('trap_fireball');
+    this.sprite.animations.play('trap_fireball', 20, true, false);
+
     this.simplePattern = true;
     this.sprite.anchor.setTo(0.5, 0.5);
     this.sprite.angle = 90;
