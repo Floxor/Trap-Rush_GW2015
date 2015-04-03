@@ -13,12 +13,10 @@ TR_end.prototype = {
 		winner = Game.add.sprite(800,400,Game.winner)
 		winner.scale.setTo(2,2);
 
-		textWin = Game.add.text(-400, 100, Game.textWinner);
-		textWin.font = 'Calibri';
-		textWin.fontSize = 70;
-		textWin.fill = '#EE9933'
-
-		Game.add.tween(textWin).to({x: 400}, 3000, Phaser.Easing.Bounce.Out, true);
+		if(Game.winner == Game.selectedP1.asset)
+			textWin = Game.add.sprite(500, 100, 'Win1');
+		else if(Game.winner == Game.selectedP2.asset)
+			textWin = Game.add.sprite(500, 100, 'Win2');
 
 		Game.menu = new buttonPerso(Game, 500, 650, 'buttonPlay');
 		Game.menu.sprite.scale.setTo(0.8,0.8);

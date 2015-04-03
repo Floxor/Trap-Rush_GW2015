@@ -8,7 +8,7 @@ TR_menu.prototype = {
 	create: function(Game){
 		Game.input.gamepad.start();
 		this.gamepadActivatedP1 = false;
-		Game.bg = Game.add.sprite(0,0, 'bgMenu');
+		Game.bg = Game.add.sprite(0,0, 'ecranTitre');
 		titre = Game.add.text(600, 100, 'TRAP RUSH');
 		titre.font = 'Calibri';
 		titre.fontSize = 120;
@@ -19,7 +19,7 @@ TR_menu.prototype = {
 		jouerButton.input.useHandCursor = true;
 		jouerButton.scale.setTo(1,0.6);
 		jouerButton.anchor.setTo(0.5,0.5);
-		
+
 		Game.valider = false;
 		
 		if(Game.input.gamepad.supported && Game.input.gamepad["pad1"]) {

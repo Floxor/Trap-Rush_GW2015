@@ -88,13 +88,10 @@ TR_start.prototype = {
 		Game.player1 = new Player(Game,Game.selectedP1.name,[150,600],1);
 		Game.player2 = new Player(Game,Game.selectedP2.name,[250,600],2);
 
-		Game.pickableGroup = [];
-		for (var i = 3 - 1; i >= 0; i--) {
-			Game.pickableGroup.push(new PickupElement([200 +i*250,100],Game,"type3"));
-		};
+		
 		Game.shakeWorld = 0;
 
-		Game.end = new Fin(Game, 3650, 250);
+		Game.end = new Fin(Game, 7050, 250);
 
 		Game.centerCamera = Game.add.sprite(0,0,null);
 		Game.camera.follow(Game.centerCamera);
@@ -136,11 +133,6 @@ TR_start.prototype = {
 			Game.bots[i].update();
 		};
 
-		for (var i = Game.pickableGroup.length - 1; i >= 0; i--) {
-			if (!Game.pickableGroup[i].goThroughMap) 
-				Game.physics.arcade.collideSpriteVsTilemapLayer(Game.pickableGroup[i].sprite, Game.tilesCollision);
-			Game.pickableGroup[i].update();
-		};
 
 		if(Game.physics.arcade.collide(Game.player1.sprite, Game.end.sprite))
 		{

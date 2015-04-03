@@ -51,8 +51,10 @@ function loadStart () {
     this.game.load.spritesheet('lever', 'assets/traps/lever.png', 179, 160, 3);
 
 	this.game.load.bitmapFont('ratatouille', 'fonts/AuthenticRatatouille.otf');
-
 	this.game.load.image('buttonPlay', 'assets/bouton-play.png');
+	this.game.load.image('ecranTitre', 'assets/ecran-titre.png');
+	this.game.load.image('Win1', 'assets/win1.png');
+	this.game.load.image('Win2', 'assets/win2.png');
 }
 
 function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles) {
