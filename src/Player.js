@@ -4,7 +4,6 @@ function Player (Game,type,pos,playerNumber) {
 
 	this.Game 						= Game;
 	this.config 					= Game.config.playerTypes[type];
-	console.log(type)
 	this.numberJumpsLeft 			= 0;
 	this.deactivateMovementTime 	= 0;
 	this.facingRight			 	= true;
@@ -76,7 +75,7 @@ function Player (Game,type,pos,playerNumber) {
 	this.rectColli = Game.add.sprite(0, 0, null);
 	Game.physics.enable(this.rectColli, Phaser.Physics.ARCADE);
 
-	this.rectColli.body.setSize(100, 125, 0, 0);
+	this.rectColli.body.setSize(300, 125, -150, 0);
 	this.rectColli.anchor.setTo(0.5, 0.5);
 
 
@@ -244,6 +243,7 @@ Player.prototype.launch = function(timeStunned,forceX,forceY) {
 }
 
 Player.prototype.launch = function(timeStunned,forceX,forceY) {
+	this.sprite.animations.play("jump",24,true);
 	this.deactivateMovementTime = timeStunned;
 	this.sprite.body.velocity.x = forceX;
 	this.sprite.body.velocity.y = forceY;
@@ -295,7 +295,7 @@ Player.prototype.move = function() {
 };
 
 Player.prototype.jump = function() {
-	if (this.deactivateMovementTime <= 0){
+	if (this.deactivateMovementTime <= 0 || !this.touchingWall){
 		this.sprite.animations.play("jump",24,true);
 		this.sprite.body.velocity.y = -this.config.speedUp;
 	}
