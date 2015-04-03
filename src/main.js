@@ -85,8 +85,8 @@ TR_start.prototype = {
 		Game.bots = [];
 		Game.winner = null;
 
-		Game.player1 = new Player(Game,Game.selectedP1.name,[150,600],1);
-		Game.player2 = new Player(Game,Game.selectedP2.name,[250,600],2);
+		Game.player1 = new Player(Game,Game.selectedP1.name,[250,3150],1);
+		Game.player2 = new Player(Game,Game.selectedP2.name,[250,3100],2);
 
 		
 		Game.shakeWorld = 0;

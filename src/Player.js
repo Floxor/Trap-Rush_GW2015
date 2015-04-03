@@ -4,7 +4,6 @@ function Player (Game,type,pos,playerNumber) {
 
 	this.Game 						= Game;
 	this.config 					= Game.config.playerTypes[type];
-	console.log(type)
 	this.numberJumpsLeft 			= 0;
 	this.deactivateMovementTime 	= 0;
 	this.facingRight			 	= true;
@@ -76,7 +75,7 @@ function Player (Game,type,pos,playerNumber) {
 	this.rectColli = Game.add.sprite(0, 0, null);
 	Game.physics.enable(this.rectColli, Phaser.Physics.ARCADE);
 
-	this.rectColli.body.setSize(100, 125, 0, 0);
+	this.rectColli.body.setSize(200, 125, -50, 0);
 	this.rectColli.anchor.setTo(0.5, 0.5);
 
 
@@ -91,6 +90,7 @@ Player.prototype.update = function () {
    	if (this.Game.input.gamepad["pad"+this.playerNumber]._rawPad) {
 		this.cursors.left.isDown 	= this.gamepadActivated ? 	Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0] < -0.3 : this.cursors.left.isDown;
 		this.cursors.right.isDown 	= this.gamepadActivated ?  	Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0] >  0.3 : this.cursors.right.isDown;
+		this.cursors.down.isDown 	= this.gamepadActivated ? 	Game.input.gamepad["pad"+this.playerNumber].isDown(Phaser.Gamepad.XBOX360_B) : this.cursors.down.isDown;
 		this.cursors.jump.isDown 	= this.gamepadActivated ? 	Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_A,50) : this.cursors.jump.downDuration();
 		this.cursors.grab.isDown 	= this.gamepadActivated ?  	Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_Y,50) : this.cursors.grab.downDuration();
 		this.cursors.punch.isDown 	= this.gamepadActivated ?  	Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_X,50) : this.cursors.punch.downDuration();
@@ -244,6 +244,7 @@ Player.prototype.launch = function(timeStunned,forceX,forceY) {
 }
 
 Player.prototype.launch = function(timeStunned,forceX,forceY) {
+	this.sprite.animations.play("jump",24,true);
 	this.deactivateMovementTime = timeStunned;
 	this.sprite.body.velocity.x = forceX;
 	this.sprite.body.velocity.y = forceY;
@@ -264,7 +265,7 @@ Player.prototype.move = function() {
 	//	this.Game.physics.arcade.collide(this.Game.player1.sprite,this.Game.player2.sprite);
 
  	if (this.cursors.left.isDown){
- 		if (this.sprite.body.blocked.down) 
+ 		if (this.sprite.body.blocked.down && this.punchTimeout <= 0) 
 			this.sprite.animations.play("run",24,true);
 		this.facingRight = false;
 		if (this.gamepadActivated) 
@@ -273,7 +274,7 @@ Player.prototype.move = function() {
 			this.sprite.body.velocity.x = (this.sprite.body.velocity.x - this.activeSpeedX  * this.acceleration).clamp(-this.activeSpeedX , 10000);
  	}
 	else if (this.cursors.right.isDown){
- 		if (this.sprite.body.blocked.down) 
+ 		if (this.sprite.body.blocked.down && this.punchTimeout <= 0) 
 			this.sprite.animations.play("run",24,true);
 		this.facingRight = true;
 		if (this.gamepadActivated) 
@@ -295,7 +296,7 @@ Player.prototype.move = function() {
 };
 
 Player.prototype.jump = function() {
-	if (this.deactivateMovementTime <= 0){
+	if (this.deactivateMovementTime <= 0 || !this.touchingWall){
 		this.sprite.animations.play("jump",24,true);
 		this.sprite.body.velocity.y = -this.config.speedUp;
 	}
