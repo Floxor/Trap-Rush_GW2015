@@ -7,6 +7,7 @@ TR_menu.prototype = {
 
 	create: function(Game){
 		Game.input.gamepad.start();
+		this.gamepadActivatedP1 = false;
 		titre = Game.add.text(600, 100, 'TRAP RUSH');
 		titre.font = 'Calibri';
 		titre.fontSize = 120;
@@ -24,17 +25,15 @@ TR_menu.prototype = {
 		jouerText.fill = "#000000";
 		jouerText.anchor.setTo(0.5,0.5);
 
-		Game.down = false;
-		Game.up = false;
 		Game.valider = false;
-		Game.jouer = false;
-
+		
 		if(Game.input.gamepad.supported && Game.input.gamepad["pad1"]) {
 			if(Game.input.gamepad["pad1"]._rawPad)
-				this.gamepadActivated = true;
+				this.gamepadActivatedP1 = true;
 		}
 
-		Game.cursors = {
+
+		this.cursorsP1 = {
 			valider 	: Game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR),
 			left 	: Game.input.keyboard.addKey(Phaser.Keyboard.Q),
 			right 	: Game.input.keyboard.addKey(Phaser.Keyboard.D),
@@ -44,18 +43,18 @@ TR_menu.prototype = {
 	},
 
 	update: function(Game){
-		Game.cursors.up.isDown 	= this.gamepadActivated ? 	Game.input.gamepad["pad1"]._rawPad.axes[1] < -0.3 : Game.cursors.up.isDown;
-		Game.cursors.up.isUp 	= this.gamepadActivated ? 	Game.input.gamepad["pad1"]._rawPad.axes[1] > -0.3 : Game.cursors.up.isUp;
-		Game.cursors.down.isDown 	= this.gamepadActivated ?  	Game.input.gamepad["pad1"]._rawPad.axes[1] >  0.3 : Game.cursors.down.isDown;
-		Game.cursors.down.isUp 	= this.gamepadActivated ?  	Game.input.gamepad["pad1"]._rawPad.axes[1] <  0.3 : Game.cursors.down.isUp;
-		Game.cursors.valider.isDown 	= this.gamepadActivated ? 	Game.input.gamepad["pad1"].justPressed(Phaser.Gamepad.XBOX360_A,50) : Game.cursors.valider.isDown;
+		this.cursorsP1.up.isDown 	= this.gamepadActivatedP1 ? 	Game.input.gamepad["pad1"]._rawPad.axes[1] < -0.3 : this.cursorsP1.up.isDown;
+		this.cursorsP1.up.isUp 	= this.gamepadActivatedP1 ? 	Game.input.gamepad["pad1"]._rawPad.axes[1] > -0.3 : this.cursorsP1.up.isUp;
+		this.cursorsP1.down.isDown 	= this.gamepadActivatedP1 ?  	Game.input.gamepad["pad1"]._rawPad.axes[1] >  0.3 : this.cursorsP1.down.isDown;
+		this.cursorsP1.down.isUp 	= this.gamepadActivatedP1 ?  	Game.input.gamepad["pad1"]._rawPad.axes[1] <  0.3 : this.cursorsP1.down.isUp;
+		this.cursorsP1.valider.isDown 	= this.gamepadActivatedP1 ? 	Game.input.gamepad["pad1"].justPressed(Phaser.Gamepad.XBOX360_A,50) : this.cursorsP1.valider.isDown;
 
-		if(Game.cursors.valider.isDown && Game.valider == false)
+		if(this.cursorsP1.valider.isDown && Game.valider == false)
 		{
 			Game.state.start('selection');
 			Game.valider = true;
 		}
-	}
+	}	
 }
 
 function selectionPerso(Game)

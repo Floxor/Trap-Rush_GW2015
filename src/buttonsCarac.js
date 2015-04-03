@@ -1,21 +1,13 @@
-function buttonPerso(Game, posX, posY, name)
+function buttonPerso(Game, posX, posY, name, buttonNum)
 {
 	this.game = Game;
 	this.x = posX;
 	this.y = posY;
 	this.name = name;
-	this.selected = false;
+	this.buttonNum = buttonNum;
 	this.graphics = Game.add.graphics(posX, posY);
 
 	this.sprite = Game.add.sprite(posX, posY, name);
-}
 
-function selection(Game)
-{
-	
-}
 
-buttonPerso.prototype.update = function() {
-	
 }
-

@@ -1,5 +1,5 @@
 function Player (Game,type,pos,playerNumber) {
-	this.playerNumber 					= playerNumber || 4;
+	this.playerNumber 				= playerNumber || 4;
 	this.gamepadActivated 			= false
 
 	this.Game 						= Game;
@@ -11,13 +11,20 @@ function Player (Game,type,pos,playerNumber) {
 	this.touchingGround				= false;
 	this.acceleration 				= 0.1;
 	this.frozen 					= 60;
+	this.punchTimeout 				= 0;
+	this.grabTimeout 				= 0;
 
+	var arrayPlayers = [1,2];
+	arrayPlayers.splice(arrayPlayers.indexOf(this.playerNumber),1);
+	this.opponentNumber = arrayPlayers[0];
 
 	this.sprite = Game.add.sprite(pos[0],pos[1],this.config.assetKey,0);
+	this.sprite.scale.setTo(this.config.scale[0],this.config.scale[1]);
 	Game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	this.sprite.body.bounce.y = 0;
-	this.sprite.body.collideWorldBounds = true;
 	this.sprite.body.gravity.y = this.config.gravity;
+	this.sprite.body.setSize(this.sprite.body.width * 0.8,this.sprite.body.height * 0.8,0,0);
+	this.sprite.body.mass = 0.1;
 	this.sprite.anchor.setTo(0.5,0.5);
 
 
@@ -27,14 +34,25 @@ function Player (Game,type,pos,playerNumber) {
 	this.animations.add('left', [0, 1, 2, 3], 10, true);
 */
 
-	this.cursors = {
-		jump 	: Game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR),
-		left 	: Game.input.keyboard.addKey(Phaser.Keyboard.Q),
-		right 	: Game.input.keyboard.addKey(Phaser.Keyboard.D),
-		grab 	: Game.input.keyboard.addKey(Phaser.Keyboard.G),
-		punch 	: Game.input.keyboard.addKey(Phaser.Keyboard.P)
-	};
-
+	if(this.playerNumber == 1 && this.gamepadActivated == false){
+		this.cursors = {
+			jump 	: Game.input.keyboard.addKey(Phaser.Keyboard.Z),
+			left 	: Game.input.keyboard.addKey(Phaser.Keyboard.Q),
+			right 	: Game.input.keyboard.addKey(Phaser.Keyboard.D),
+			grab 	: Game.input.keyboard.addKey(Phaser.Keyboard.B),
+			punch 	: Game.input.keyboard.addKey(Phaser.Keyboard.V)
+		};
+	}
+	else if(this.playerNumber == 2 && this.gamepadActivated == false){
+		this.cursors = {
+			jump 	: Game.input.keyboard.addKey(Phaser.Keyboard.UP),
+			left 	: Game.input.keyboard.addKey(Phaser.Keyboard.LEFT),
+			right 	: Game.input.keyboard.addKey(Phaser.Keyboard.RIGHT),
+			grab 	: Game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_3),
+			punch 	: Game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_2)
+		};
+	}
+		
 	if(Game.input.gamepad.supported && Game.input.gamepad["pad"+playerNumber]) {
 		if(Game.input.gamepad["pad"+playerNumber]._rawPad)
 			this.gamepadActivated = true;
@@ -56,6 +74,7 @@ function Player (Game,type,pos,playerNumber) {
 
 	this.rectColli = Game.add.sprite(0, 0, null);
 	Game.physics.enable(this.rectColli, Phaser.Physics.ARCADE);
+
 	this.rectColli.body.setSize(150, 100, 0, 0);
 	this.rectColli.anchor.setTo(0.5, 0.5);
 }
@@ -66,12 +85,17 @@ function Player (Game,type,pos,playerNumber) {
 Player.prototype.update = function () {
 
 
-
 	this.cursors.left.isDown 	= this.gamepadActivated ? 	Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0] < -0.3 : this.cursors.left.isDown;
 	this.cursors.right.isDown 	= this.gamepadActivated ?  	Game.input.gamepad["pad"+this.playerNumber]._rawPad.axes[0] >  0.3 : this.cursors.right.isDown;
 	this.cursors.jump.isDown 	= this.gamepadActivated ? 	Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_A,50) : this.cursors.jump.downDuration();
 	this.cursors.grab.isDown 	= this.gamepadActivated ?  	Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_Y,50) : this.cursors.grab.downDuration();
 	this.cursors.punch.isDown 	= this.gamepadActivated ?  	Game.input.gamepad["pad"+this.playerNumber].justPressed(Phaser.Gamepad.XBOX360_X,50) : this.cursors.punch.downDuration();
+
+	this.sprite.body.velocity.x = Math.abs(this.sprite.body.velocity.x) < 1? 0 : this.sprite.body.velocity.x;
+	this.sprite.body.velocity.y = Math.abs(this.sprite.body.velocity.y) < 1? 0 : this.sprite.body.velocity.y;
+
+
+	
 
 	if (this.frozen-- > 0) {
 		this.sprite.body.allowGravity = false;
@@ -88,6 +112,8 @@ Player.prototype.update = function () {
 	this.sprite.scale.x = this.facingRight ? 1 : -1;
 
 	this.Game.debug.body(this.rectColli)
+	this.sprite.scale.x = this.facingRight ? this.config.scale[0] : -this.config.scale[0];
+
 	if (!this.touchingWall) {
 		this.sprite.body.gravity.y = this.config.gravity;
 		if ((this.cursors.jump.isDown && this.sprite.body.onFloor()) || (this.cursors.jump.isDown && this.sprite.body.blocked.down))
@@ -103,6 +129,7 @@ Player.prototype.update = function () {
 		if ((this.cursors.jump.isDown && this.sprite.body.onFloor()) || (this.cursors.jump.isDown && this.sprite.body.blocked.down))
 			this.jump();
 		else if (this.cursors.jump.isDown){
+			this.numberJumpsLeft = this.config.maxJumps - 1;
 			this.launch(10,this.config.speedX  * (this.sprite.body.blocked.left - this.sprite.body.blocked.right) * 0.75,-this.config.speedUp);
 		}
 		if (!this.sprite.body.onFloor()) {
@@ -116,9 +143,9 @@ Player.prototype.update = function () {
 
 	this.move();
 
-	if (this.cursors.grab.isDown && !this.isGrabbing) 
+	if (this.grabTimeout-- < 0 && this.cursors.grab.isDown) 
 		this.grab();
-	else if (this.cursors.punch.isDown && !this.isPunching) 
+	else if (this.punchTimeout-- < 0 && this.cursors.punch.isDown) 
 		this.punch();
 	this.sprite.body.velocity.y = (this.sprite.body.velocity.y).clamp(-this.config.speedUp,this.config.speedDown);
 	this.rectColli.x = this.sprite.x + this.sprite.width * 0.5 + this.rectColli.width * (this.facingRight - 0.5);
@@ -126,10 +153,33 @@ Player.prototype.update = function () {
 }
 
 Player.prototype.grab = function() {
-	this.isGrabbing = true;
-	console.log("grab");
-	that = this;
-	setTimeout(function() {that.isGrabbing = false}, 500);
+	this.grabTimeout = 30;
+		if (this.Game.physics.arcade.overlap(this.rectColli,this.Game["player"+this.opponentNumber].sprite)) {
+			var angle = this.Game.physics.arcade.angleBetween(this.sprite,this.Game["player"+this.opponentNumber].sprite);
+			this.Game["player"+this.opponentNumber].launch(20,- this.config.punchPower * Math.cos(angle) * 0.75,  - 300 - this.config.punchPower * Math.sin(angle));
+			return;
+		};	
+
+		if (this.carrying) {
+			var angle = this.Game.physics.arcade.angleBetween(this.sprite,this.Game["player"+this.opponentNumber].sprite);
+			this.objectCarried.throw(this.Game["player"+this.opponentNumber],this.config.punchPower * Math.cos(angle) * 2,  this.config.punchPower * Math.sin(angle))
+			this.carrying = false;
+			this.objectCarried = null;
+			return;
+		};
+
+		for (var i = this.Game.pickableGroup.length - 1; i >= 0; i--) {
+			if (this.Game.physics.arcade.overlap(this.rectColli,this.Game.pickableGroup[i].sprite) && !this.Game.pickableGroup[i].thrown) {
+				this.Game.pickableGroup[i].picked = true;
+				this.Game.pickableGroup[i].pickedBy = this;
+				this.Game.pickableGroup[i].sprite.body.allowGravity = false;
+				this.Game.pickableGroup[i].sprite.body.immovable = true;
+				this.carrying = true;
+				this.objectCarried = this.Game.pickableGroup[i];
+				return;
+			}
+		};
+
 }
 
 Player.prototype.punch = function() {
@@ -155,7 +205,24 @@ Player.prototype.launch = function(timeStunned,forceX,forceY) {
 	this.deactivateMovementTime = timeStunned;
 	this.sprite.body.velocity.x = forceX;
 	this.sprite.body.velocity.y = forceY;
+	/*
+		AnimPunch !
+	*/
+	
+		if (this.Game.physics.arcade.overlap(this.rectColli,this.Game["player"+this.opponentNumber].sprite)) {
+			var angle = this.Game.physics.arcade.angleBetween(this.sprite,this.Game["player"+this.opponentNumber].sprite);
+
+			this.Game["player"+this.opponentNumber].launch(15,this.config.punchPower * Math.cos(angle) *0.5,  - 300 + this.config.punchPower * Math.sin(angle));
+		};	
+	this.punchTimeout = 30;
 }
+
+Player.prototype.launch = function(timeStunned,forceX,forceY) {
+	this.deactivateMovementTime = timeStunned;
+	this.sprite.body.velocity.x = forceX;
+	this.sprite.body.velocity.y = forceY;
+}
+
 
 
 Player.prototype.move = function() {
@@ -167,6 +234,9 @@ Player.prototype.move = function() {
 		this.sprite.animations.stop('walk');
 	}
 
+	
+	//if (this.Game["player"+this.opponentNumber].deactivateMovementTime <= 0)
+	//	this.Game.physics.arcade.collide(this.Game.player1.sprite,this.Game.player2.sprite);
 
  	if (this.cursors.left.isDown){
  		this.sprite.animations.play('walk', 30, true);
@@ -196,7 +266,8 @@ Player.prototype.move = function() {
 };
 
 Player.prototype.jump = function() {
-	this.sprite.body.velocity.y = -this.config.speedUp;
+	if (this.deactivateMovementTime <= 0)
+		this.sprite.body.velocity.y = -this.config.speedUp;
 };
 
 
@@ -221,9 +292,9 @@ function PickupElement (pos,Game,type) {
 	Player.call(this,Game,type,pos);
 	this.sprite.x = pos[0];
 	this.sprite.y = pos[1];
-	this.sprite.body.mass = 0.5;
+	this.sprite.body.mass = 0.05;
+	this.sprite.body.setSize(this.sprite.body.width*10,this.sprite.body.height* 10,0,0);
 
-	this.sprite.scale.setTo(0.4,0.4);
 }
 
 PickupElement.prototype.constructor = PickupElement;
@@ -232,9 +303,37 @@ PickupElement.prototype = Object.create(Player.prototype);
 PickupElement.prototype.update = function () {
 	this.sprite.body.velocity.x = this.sprite.body.velocity.x * 0.8;
 	if (this.Game.physics.arcade.overlap(this.sprite,this.Game.player1.sprite,null) || this.Game.physics.arcade.overlap(this.sprite,this.Game.player2.sprite,null)) {
+		if (this.thrown) {
+			this.sprite.outOfBoundsKill = true;
+			if (this.Game.physics.arcade.overlap(this.sprite,this.targetPlayer.sprite)) {
+				var angle = this.Game.physics.arcade.angleBetween(this.pickedBy.sprite,this.Game["player"+this.opponentNumber].sprite);
+				this.targetPlayer.launch(90,10 * Math.cos(angle), 300 * Math.sin(angle));
+				this.sprite.destroy();
+				this.Game.pickableGroup.splice(this.Game.pickableGroup.indexOf(this),1);
+			};
+			return;
+		}
 	};
+	this.sprite.body.velocity.x = this.sprite.body.velocity.x * 0.97;
+	this.sprite.body.velocity.y = (this.sprite.body.velocity.y).clamp(-this.config.speedUp,this.config.speedDown);
+	if (this.picked) {
+		
+		this.sprite.x = this.pickedBy.rectColli.x;
+		this.sprite.y = this.pickedBy.rectColli.y;
+		return;
+	};
+
 	for (var i = this.Game.pickableGroup.length - 1; i >= 0; i--) {
 		this.Game.physics.arcade.collide(this.sprite,this.Game.pickableGroup[i].sprite,null);
-		
 	};
+}
+
+
+PickupElement.prototype.throw = function(target,forceX,forceY) {
+	this.targetPlayer 			= target;
+	this.thrown 				= true;
+	this.sprite.body.velocity.x = forceX;
+	this.sprite.body.velocity.y = forceY;
+	this.sprite.body.immovable  = false;
+	this.goThroughMap 			= true;
 }

@@ -3,6 +3,7 @@
 		"placeholder1":{
 			"assetKey":"placeholder1",
 			"gravity":3000,
+			"scale":[1,1],
 			"speedX":750,
 			"speedUp":1000,
 			"speedDown":500,
@@ -12,6 +13,7 @@
 		"placeholder2":{
 			"assetKey":"placeholder2",
 			"gravity":3000,
+			"scale":[1,1],
 			"speedX":750,
 			"speedUp":1000,
 			"speedDown":500,
@@ -21,7 +23,9 @@
 		"placeholder3":{
 			"assetKey":"placeholder3",
 			"gravity":3000,
-			"speedX":500,
+			"scale":[0.5,0.5],
+			"speedX":750,
+			"type":"player",
 			"speedUp":1000,
 			"speedDown":500,
 			"maxJumps":2,
