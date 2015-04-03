@@ -6,7 +6,8 @@ function Trap(pParams) {
     this.x = pParams.x;
     this.y = pParams.y;
     if (pParams.sprite) {
-        this.sprite = Game.add.sprite(this.x, this.y, pParams.sprite, 0);
+        this.sprite = this.game.add.sprite(this.x, this.y, pParams.sprite, 0);
+        this.sprite.animations.add(pParams.sprite);
         this.game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
         this.sprite.body.allowGravity = false;
     }
@@ -45,8 +46,10 @@ Trap.prototype.collide = function () {
 Trap.prototype.testKillPlayers = function () {
     //COLISION
     var _this = this;
-    this.game.physics.arcade.overlap(this.sprite, this.game.player.sprite, function() {
-        //_this.game.player.killAnimation();
-        console.log('kill player')
+    this.game.physics.arcade.overlap(this.sprite, this.game.player1.sprite, function() {
+        _this.game.player1.killAnimation();
+    });
+    this.game.physics.arcade.overlap(this.sprite, this.game.player2.sprite, function() {
+        _this.game.player2.killAnimation();
     });
 };

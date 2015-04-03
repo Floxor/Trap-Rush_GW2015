@@ -11,17 +11,21 @@ function Pikes(pParams) {
     this.init();
 
     this.doNormal = function () {
-        this.game.physics.arcade.overlap(this.hitArea, this.game.player.sprite, function() {
-            //_this.game.player.killAnimation();
-            console.log('kill player')
+        this.game.physics.arcade.overlap(this.hitArea, this.game.player1.sprite, function() {
+            _this.game.player1.killAnimation();
+        });
+        this.game.physics.arcade.overlap(this.hitArea, this.game.player2.sprite, function() {
+            _this.game.player2.killAnimation();
         });
     };
 
     this.doAction = function () {
         for (var i = this.quantity -1; i >= 0; i--) {
-            this.game.physics.arcade.overlap(this.sprite[i], this.game.player.sprite, function() {
-                //_this.game.player.killAnimation();
-                console.log('kill player')
+            this.game.physics.arcade.overlap(this.sprite[i], this.game.player1.sprite, function() {
+                _this.game.player1.killAnimation();
+            });
+            this.game.physics.arcade.overlap(this.sprite[i], this.game.player2.sprite, function() {
+                _this.game.player2.killAnimation();
             });
         }
     };
@@ -30,8 +34,11 @@ function Pikes(pParams) {
         this.doLoop = this.doAction;
 
         //ANIMATION
-        //bird.animations.add('fly', [0, 1], 10, true);
-        //bird.animations.play('fly');
+        for (var i = this.quantity -1; i >= 0; i--) {
+            this.sprite[i].animations.play('trap_pikes'+i, 20, false, false);
+            console.log(i+' ggg');
+        }
+
         console.log('ANIMATION PIKES');
     };
 
@@ -44,8 +51,10 @@ Pikes.prototype = Object.create(Trap.prototype);
 Pikes.prototype.init = function () {
     this.sprite = [];
     this.sprite[0] = this.game.add.sprite(this.x, this.y, 'trap_pikes', 0);
+    this.sprite[0].animations.add('trap_pikes'+0);
     for (var i = 1; i < this.quantity; i++) {
         this.sprite.push(this.game.add.sprite(this.x + (i * this.sprite[0].width), this.y, 'trap_pikes', 0));
+        this.sprite[i].animations.add('trap_pikes'+i);
     }
 
     for (var i = 0; i < this.quantity; i++) {

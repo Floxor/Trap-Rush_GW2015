@@ -39,7 +39,8 @@ TR_start.prototype = {
 		Game.keys = Game.input.keyboard.createCursorKeys();
 		Game.map = Game.add.tilemap('map');
 		Game.map.addTilesetImage('collision', 'tilesetPlaceholder');
-		Game.scale.compatibility.forceMinimumDocumentHeight = true
+		Game.scale.compatibility.forceMinimumDocumentHeight = true;
+        Game.traps = []; //Liste des traps
 		Game.map.layers.forEach(function(l){
 			var layer=Game.map.createLayer(l.name);
 		
@@ -97,6 +98,26 @@ TR_start.prototype = {
 
 		Game.centerCamera = Game.add.sprite(0,0,null);
 		Game.camera.follow(Game.centerCamera);
+
+        //Bords du stage
+        Game.stageEdges = {
+            right: Game.add.sprite(Game.width, 0, false),
+            bottom: Game.add.sprite(0, Game.height, false),
+            left: Game.add.sprite(-100, 0, false),
+            top: Game.add.sprite(0, -100, false)
+        };
+        for(var x in Game.stageEdges) {
+            Game.physics.enable(Game.stageEdges[x], Phaser.Physics.ARCADE);
+            Game.stageEdges[x].body.allowGravity = false;
+        }
+        Game.stageEdges.right.width     = Game.stageEdges.left.width    = 100;
+        Game.stageEdges.right.height    = Game.stageEdges.left.height   = Game.height;
+        Game.stageEdges.bottom.width    = Game.stageEdges.top.width     = Game.width;
+        Game.stageEdges.bottom.height   = Game.stageEdges.top.height    = 100;
+        Game.stageEdges.left.anchor.setTo(1, 0);
+        Game.stageEdges.top.anchor.setTo(0, 1);
+
+
 	},
 
 	update: function(Game){
@@ -140,6 +161,21 @@ TR_start.prototype = {
 		Game.player2.update();
 		Game.player1.update();
 		fixCamera(Game);
+
+        //Loop traps & levers
+        var trapsLength = Game.traps.length;
+        for (var i = 0; i < trapsLength; i++) {
+            Game.traps[i].doLoop();
+        }
+
+        Game.stageEdges.right.x = Game.camera.x + Game.width;
+        Game.stageEdges.right.y = Game.camera.y;
+        Game.stageEdges.bottom.x = Game.camera.x;
+        Game.stageEdges.bottom.y = Game.camera.y + Game.height;
+        Game.stageEdges.left.x = Game.camera.x;
+        Game.stageEdges.left.y = Game.camera.y;
+        Game.stageEdges.top.x = Game.camera.x;
+        Game.stageEdges.top.y = Game.camera.y;
 	},
 
 	render:function (Game) {
