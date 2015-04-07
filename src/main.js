@@ -88,10 +88,9 @@ TR_start.prototype = {
 		Game.player1 = new Player(Game,Game.selectedP1.name,[250,3150],1);
 		Game.player2 = new Player(Game,Game.selectedP2.name,[250,3100],2);
 
-		
 		Game.shakeWorld = 0;
 
-		Game.end = new Fin(Game, 7050, 250);
+		Game.end = new Fin(Game, 7025, 275);
 
 		Game.centerCamera = Game.add.sprite(0,0,null);
 		Game.camera.follow(Game.centerCamera);
@@ -114,6 +113,23 @@ TR_start.prototype = {
         Game.stageEdges.left.anchor.setTo(1, 0);
         Game.stageEdges.top.anchor.setTo(0, 1);
 
+        new Lever({
+        	game:Game,
+        	x:400,
+        	y:3150,
+        	callback: function(){
+        		new Knifes({
+        			game:Game,
+        			x:100,
+        			y:3150
+        		})
+        	} 
+        })
+
+		// Game.go = Game.add.sprite(250,2650, 'decompte');
+		// Game.go.scale.setTo(3,3);
+		// Game.go.animations.add('start');
+		// Game.go.animations.play('start', 12, true);
 
 	},
 
@@ -137,14 +153,12 @@ TR_start.prototype = {
 		if(Game.physics.arcade.collide(Game.player1.sprite, Game.end.sprite))
 		{
 			Game.winner = Game.selectedP1.asset;
-			Game.textWinner = "Player 1 win !!"
 			Game.state.start("fin");
 		}
 
 		if(Game.physics.arcade.collide(Game.player2.sprite, Game.end.sprite))
 		{
 			Game.winner = Game.selectedP2.asset;
-			Game.textWinner = "Player 2 win !!"
 			Game.state.start("fin");
 		}
 

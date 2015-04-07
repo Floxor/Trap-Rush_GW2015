@@ -21,8 +21,6 @@ function Player (Game,type,pos,playerNumber) {
 	this.opponentNumber = arrayPlayers[0];
 
 
-
-
 	this.sprite = Game.add.sprite(pos[0],pos[1],this.config.assetKey,0);
 	this.sprite.scale.setTo(this.config.scale[0],this.config.scale[1]);
 	Game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
@@ -48,17 +46,27 @@ function Player (Game,type,pos,playerNumber) {
 	this.sprite.animations.add("slide",[136]);
 	this.sprite.animations.play("idle",24,true);
 
+	if(this.playerNumber == 1){
+		this.cursors = {
+			jump 	: Game.input.keyboard.addKey(Phaser.Keyboard.Z),
+			left 	: Game.input.keyboard.addKey(Phaser.Keyboard.Q),
+			right 	: Game.input.keyboard.addKey(Phaser.Keyboard.D),
+			down    : Game.input.keyboard.addKey(Phaser.Keyboard.S),
+			grab 	: Game.input.keyboard.addKey(Phaser.Keyboard.B),
+			punch 	: Game.input.keyboard.addKey(Phaser.Keyboard.V)
+		};
+	}
 
-	this.cursors = {
-		jump 	: Game.input.keyboard.addKey(Phaser.Keyboard.Z),
-		left 	: Game.input.keyboard.addKey(Phaser.Keyboard.Q),
-		right 	: Game.input.keyboard.addKey(Phaser.Keyboard.D),
-		down    : Game.input.keyboard.addKey(Phaser.Keyboard.DOWN),
-		grab 	: Game.input.keyboard.addKey(Phaser.Keyboard.B),
-		punch 	: Game.input.keyboard.addKey(Phaser.Keyboard.V)
-	};
-	
-
+	else if(this.playerNumber == 2){
+		this.cursors = {
+			jump 	: Game.input.keyboard.addKey(Phaser.Keyboard.UP),
+			left 	: Game.input.keyboard.addKey(Phaser.Keyboard.LEFT),
+			right 	: Game.input.keyboard.addKey(Phaser.Keyboard.RIGHT),
+			down    : Game.input.keyboard.addKey(Phaser.Keyboard.DOWN),
+			grab 	: Game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_3),
+			punch 	: Game.input.keyboard.addKey(Phaser.Keyboard.NUMPAD_2)
+		};
+	}
 
 	this.smokeEmitter = Game.add.emitter(Game.world.centerX, Game.world.height *0.5, Game.world.width * 0.5);
 	this.smokeEmitter.makeParticles('smoke');
@@ -77,11 +85,7 @@ function Player (Game,type,pos,playerNumber) {
 
 	this.rectColli.body.setSize(200, 125, -50, 0);
 	this.rectColli.anchor.setTo(0.5, 0.5);
-
-
 }
-
-
 
 
 Player.prototype.update = function () {
@@ -164,8 +168,6 @@ Player.prototype.update = function () {
 			this.smokeEmitter.emitY = this.sprite.y + Math.random() * 20 - 10;
 			this.smokeEmitter.on = true;
 		};
-
-
 	}
 
 
@@ -183,37 +185,37 @@ Player.prototype.update = function () {
 	if (this.punchTimeout > 0 && this.sprite.animations.currentAnim.name != "spin") {
 		this.sprite.animations.play("spin",24,false);
 	}
-
 }
 
 Player.prototype.grab = function() {
 	this.grabTimeout = 30;
-		if (this.Game.physics.arcade.overlap(this.rectColli,this.Game["player"+this.opponentNumber].sprite)) {
-			var angle = this.Game.physics.arcade.angleBetween(this.sprite,this.Game["player"+this.opponentNumber].sprite);
-			this.Game["player"+this.opponentNumber].launch(20,- this.config.punchPower * Math.cos(angle) * 0.75,  - 300 - this.config.punchPower * Math.sin(angle));
-			return;
-		};	
+	
+	if (this.Game.physics.arcade.overlap(this.rectColli,this.Game["player"+this.opponentNumber].sprite)) {
+		var angle = this.Game.physics.arcade.angleBetween(this.sprite,this.Game["player"+this.opponentNumber].sprite);
+		this.Game["player"+this.opponentNumber].launch(20,- this.config.punchPower * Math.cos(angle) * 0.75,  - 300 - this.config.punchPower * Math.sin(angle));
+		return;
+	};	
 
-		if (this.carrying) {
-			var angle = this.Game.physics.arcade.angleBetween(this.sprite,this.Game["player"+this.opponentNumber].sprite);
-			this.objectCarried.throw(this.Game["player"+this.opponentNumber],this.config.punchPower + this.config.punchPower * Math.cos(angle) * 0.5,  this.config.punchPower +  this.config.punchPower * Math.sin(angle))
-			this.carrying = false;
-			this.objectCarried = null;
-			return;
-		};
+	if (this.carrying) {
+		var angle = this.Game.physics.arcade.angleBetween(this.sprite,this.Game["player"+this.opponentNumber].sprite);
+		this.objectCarried.throw(this.Game["player"+this.opponentNumber],this.config.punchPower + this.config.punchPower * Math.cos(angle) * 0.5,  this.config.punchPower +  this.config.punchPower * Math.sin(angle))
+		this.carrying = false;
+		this.objectCarried = null;
+		return;
+	};
 
-		for (var i = this.Game.pickableGroup.length - 1; i >= 0; i--) {
-			if (this.Game.physics.arcade.overlap(this.rectColli,this.Game.pickableGroup[i].sprite) && !this.Game.pickableGroup[i].thrown) {
-				this.Game.pickableGroup[i].picked = true;
-				this.Game.pickableGroup[i].pickedBy = this;
-				this.Game.pickableGroup[i].sprite.body.allowGravity = false;
-				this.Game.pickableGroup[i].sprite.body.immovable = true;
-				this.carrying = true;
-				this.objectCarried = this.Game.pickableGroup[i];
-				return;
-			}
-		};
-
+		/* Pour les objets à Grab dans le niveau */
+	// for (var i = this.Game.pickableGroup.length - 1; i >= 0; i--) {
+	// 	if (this.Game.physics.arcade.overlap(this.rectColli,this.Game.pickableGroup[i].sprite) && !this.Game.pickableGroup[i].thrown) {
+	// 		this.Game.pickableGroup[i].picked = true;
+	// 		this.Game.pickableGroup[i].pickedBy = this;
+	// 		this.Game.pickableGroup[i].sprite.body.allowGravity = false;
+	// 		this.Game.pickableGroup[i].sprite.body.immovable = true;
+	// 		this.carrying = true;
+	// 		this.objectCarried = this.Game.pickableGroup[i];
+	// 		return;
+	// 	}
+	// };
 }
 
 Player.prototype.punch = function() {

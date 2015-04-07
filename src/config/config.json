@@ -2,17 +2,19 @@
 	"playerTypes":{
 		"type1":{
 			"assetKey":"playerSpriteSheet",
+			"icon":"IconP1",
 			"gravity":3000,
 			"scale":[1,1],
+			"type":"player",
 			"speedX":750,
 			"speedUp":1000,
-			"type":"player",
 			"speedDown":501,
 			"maxJumps":2,
 			"punchPower": 750
 		},
 		"type2":{
 			"assetKey":"playerSpriteSheet2",
+			"icon":"IconP2",
 			"gravity":3000,
 			"scale":[1,1],
 			"type":"player",
@@ -24,17 +26,19 @@
 		},
 		"type3":{
 			"assetKey":"playerSpriteSheet3",
+			"icon":"IconP3",
 			"gravity":3000,
 			"scale":[1,1],
 			"type":"player",
 			"speedX":750,
 			"speedUp":1000,
-			"speedDown":200,
+			"speedDown":501,
 			"maxJumps":2,
 			"punchPower": 750
 		},
 		"type4":{
 			"assetKey":"playerSpriteSheet4",
+			"icon":"IconP4",
 			"gravity":3000,
 			"scale":[1,1],
 			"speedX":750,

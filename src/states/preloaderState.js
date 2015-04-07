@@ -55,6 +55,13 @@ function loadStart () {
 	this.game.load.image('ecranTitre', 'assets/ecran-titre.png');
 	this.game.load.image('Win1', 'assets/win1.png');
 	this.game.load.image('Win2', 'assets/win2.png');
+
+	this.game.load.image('IconP1', 'assets/IconP1.png');
+	this.game.load.image('IconP2', 'assets/IconP2.png');
+	this.game.load.image('IconP3', 'assets/IconP3.png');
+	this.game.load.image('IconP4', 'assets/IconP4.png');
+
+	//this.game.load.spritesheet('decompte', 'assets/decompte.png',203,511);
 }
 
 function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles) {

@@ -11,15 +11,15 @@ TR_end.prototype = {
 		Game.bg = Game.add.sprite(0,0, 'bgMenu');
 
 		winner = Game.add.sprite(800,400,Game.winner)
-		winner.scale.setTo(2,2);
+		winner.scale.setTo(1,1);
 
 		if(Game.winner == Game.selectedP1.asset)
 			textWin = Game.add.sprite(500, 100, 'Win1');
 		else if(Game.winner == Game.selectedP2.asset)
 			textWin = Game.add.sprite(500, 100, 'Win2');
 
-		Game.menu = new buttonPerso(Game, 500, 650, 'buttonPlay');
-		Game.menu.sprite.scale.setTo(0.8,0.8);
+		Game.menu = new buttonPerso(Game, 450, 650, 'buttonPlay');
+		Game.menu.sprite.scale.setTo(0.5,0.5);
 		Game.menu.sprite.anchor.setTo(0.5,0.5);
 
 		Game.valider = false;
@@ -31,10 +31,10 @@ TR_end.prototype = {
 		}
 
 		this.cursorsP1 = {
-			valider 	: Game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR),
+			valider : Game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR),
 			left 	: Game.input.keyboard.addKey(Phaser.Keyboard.Q),
 			right 	: Game.input.keyboard.addKey(Phaser.Keyboard.D),
-			up 	: Game.input.keyboard.addKey(Phaser.Keyboard.Z),
+			up 		: Game.input.keyboard.addKey(Phaser.Keyboard.Z),
 			down 	: Game.input.keyboard.addKey(Phaser.Keyboard.S)
 		}
 	},

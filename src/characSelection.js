@@ -19,24 +19,25 @@ TR_selection.prototype = {
 		Game.carac1 = new buttonPerso(Game, 150, 200, "type1",1);
 		Game.carac2 = new buttonPerso(Game, 150, 300, "type2",1);
 		Game.carac3 = new buttonPerso(Game, 150, 400, "type3",1);
-		Game.carac7 = new buttonPerso(Game, 150, 500, "type4",1);
+		Game.carac4 = new buttonPerso(Game, 150, 500, "type4",1);
 		
 		Game.buttonsP1 = [];
 		Game.buttonsP1.push(Game.carac1);
 		Game.buttonsP1.push(Game.carac2);
 		Game.buttonsP1.push(Game.carac3);
-		Game.buttonsP1.push(Game.carac7);
+		Game.buttonsP1.push(Game.carac4);
 
-		Game.carac4 = new buttonPerso(Game, 900, 200, "type1",1);
-		Game.carac5 = new buttonPerso(Game, 900, 300, "type2",1);
-		Game.carac6 = new buttonPerso(Game, 900, 400, "type3",1);
+		Game.carac5 = new buttonPerso(Game, 900, 200, "type1",1);
+		Game.carac6 = new buttonPerso(Game, 900, 300, "type2",1);
+		Game.carac7 = new buttonPerso(Game, 900, 400, "type3",1);
 		Game.carac8 = new buttonPerso(Game, 900, 500, "type4",1);
 		
 		Game.buttonsP2 = [];
-		Game.buttonsP2.push(Game.carac1);
-		Game.buttonsP2.push(Game.carac2);
-		Game.buttonsP2.push(Game.carac3);
-		Game.buttonsP1.push(Game.carac8);
+		Game.buttonsP2.push(Game.carac5);
+		Game.buttonsP2.push(Game.carac6);
+		Game.buttonsP2.push(Game.carac7);
+		Game.buttonsP2.push(Game.carac8);
+
 
 		Game.selectedP1 = Game.buttonsP1[0];
 		Game.caracSelectedP1 = new buttonPerso(Game, 400, 300, Game.buttonsP1[0].name)
@@ -67,9 +68,7 @@ TR_selection.prototype = {
 		
 		this.cursorsP1 = {
 			valider 	: Game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR),
-			left 	: Game.input.keyboard.addKey(Phaser.Keyboard.Q),
-			right 	: Game.input.keyboard.addKey(Phaser.Keyboard.D),
-			up 	: Game.input.keyboard.addKey(Phaser.Keyboard.Z),
+			up 		: Game.input.keyboard.addKey(Phaser.Keyboard.Z),
 			down 	: Game.input.keyboard.addKey(Phaser.Keyboard.S)
 		}
 
@@ -182,9 +181,9 @@ TR_selection.prototype = {
 
 		if(Game.jouerP1 == true && Game.jouerP2 == true)
 		{
-			jouerButton = Game.add.button(600, 600, 'buttonPlay', jouer, this, 1,1,1);
+			jouerButton = Game.add.button(600, 700, 'buttonPlay', jouer, this, 1,1,1);
 			jouerButton.input.useHandCursor = true;
-			jouerButton.scale.setTo(1,0.6);
+			jouerButton.scale.setTo(0.4,0.4);
 			jouerButton.anchor.setTo(0.5,0.5);
 		}
 
