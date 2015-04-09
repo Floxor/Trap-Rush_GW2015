@@ -20,14 +20,15 @@ function Pikes(pParams) {
     };
 
     this.doAction = function () {
-        for (var i = this.quantity -1; i >= 0; i--) {
-            this.game.physics.arcade.overlap(this.sprite[i], this.game.player1.sprite, function() {
-                _this.game.player1.killAnimation();
-            });
-            this.game.physics.arcade.overlap(this.sprite[i], this.game.player2.sprite, function() {
-                _this.game.player2.killAnimation();
-            });
-        }
+    //     for (var i = this.quantity -1; i >= 0; i--) {
+    //         this.game.physics.arcade.overlap(this.sprite[i], this.game.player1.sprite, function() {
+    //             _this.game.player1.killAnimation();
+    //         });
+    //         this.game.physics.arcade.overlap(this.sprite[i], this.game.player2.sprite, function() {
+    //             _this.game.player2.killAnimation();
+    //         });
+    //     }
+        this.testKillPlayers();
     };
 
     this.start = function () {

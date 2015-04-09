@@ -10,14 +10,16 @@ function Pikeswall(pParams) {
 
     this.direction = pParams.direction || 'left';
     if(this.direction === 'left' || this.direction === -1) {
-        this.sprite.scale.x = -1;
-        this.sprite.anchor.setTo(1, 0);
+        // this.sprite.scale.x = -1;
+        // this.sprite.anchor.setTo(1, 0);
         this.angle = 90;
     } else if (this.direction === 'right' || this.direction === 1){
         this.sprite.scale.x = 1;
         this.sprite.anchor.setTo(1, 0);
         this.angle = -90;
     }
+
+    // pivot = Game.add.tween(this.sprite);
 
     this.loweringTime = 1000;
     this.counter = 0;
@@ -28,8 +30,16 @@ function Pikeswall(pParams) {
 
     this.doAction = function () {
         if (this.counter < this.loweringTime) {
+            // pivot.to({ angle: this.angle }, this.speed, Phaser.Easing.Linear.None, true);
+            // pivot.start();
             this.game.add.tween(this.sprite).to( { angle: this.angle }, this.speed, Phaser.Easing.Linear.None, true);
         }
+
+        // pigArrives = game.add.tween(pig);
+
+        // pigArrives.to({x:150}, 1000, Phaser.Easing.Bounce.Out);
+        // pigArrives.onComplete.add(firstTween, this);
+        // pigArrives.start();
 
         this.testKillPlayers();
     };

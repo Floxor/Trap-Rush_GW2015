@@ -12,22 +12,28 @@ function Lever(pParams) {
     this.y = pParams.y;
     this.callBack = pParams.callBack || function(){};
 
+    this.activated = false;
+
     this.init();
 
     this.doLoop = function () {
         var _this = this;
-        this.game.physics.arcade.overlap(this.sprite, this.game.player1.sprite, function() {
-            if (_this.game.player1.cursors.down.isDown) {
-                _this.activation();
-                _this.game.player1.killAnimation();
-            }
-        });
-        this.game.physics.arcade.overlap(this.sprite, this.game.player2.sprite, function() {
-            if (_this.game.player2.cursors.down.isDown) {
-                _this.activation();
-                _this.game.player2.killAnimation();
-            }
-        });
+        if(!this.activated){
+            this.game.physics.arcade.overlap(this.sprite, this.game.player1.sprite, function() {
+                if (_this.game.player1.cursors.down.isDown) {
+                    _this.activation();
+                    _this.game.player1.killAnimation();
+                    _this.game.player1.actionTrap = true;
+                }
+            });
+            this.game.physics.arcade.overlap(this.sprite, this.game.player2.sprite, function() {
+                if (_this.game.player2.cursors.down.isDown) {
+                    _this.activation();
+                    _this.game.player2.killAnimation();
+                    _this.game.player2.actionTrap = true;
+                }
+            });
+        }
     };
 
     this.addLeverLoop();
@@ -57,6 +63,7 @@ Lever.prototype.activation = function() {
 Lever.prototype.animation = function() {
     console.log('Animation du levier');
     this.sprite.animations.play('lever', 20, false, false);
+    this.activated = true;
 };
 
 Lever.prototype.addLeverLoop = function() {

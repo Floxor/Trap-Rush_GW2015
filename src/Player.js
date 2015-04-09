@@ -15,6 +15,7 @@ function Player (Game,type,pos,playerNumber) {
 	this.punchTimeout 				= 0;
 	this.grabTimeout 				= 0;
 	this.activeSpeedX 				= this.config.speedX;
+	this.actionTrap					= false;
 
 	var arrayPlayers = [1,2];
 	arrayPlayers.splice(arrayPlayers.indexOf(this.playerNumber),1);
@@ -115,10 +116,11 @@ Player.prototype.update = function () {
 	else{
 		this.sprite.body.allowGravity = true;
 		this.sprite.body.immovable = false;
+		this.frozen = 0;
 	}
 
-	if (this.isDead-- < 0 && this.sprite.alive == true) {
-		 this.respawn();
+	if (this.isDead-- < 0 && this.sprite.alive == false) {
+		this.respawn();
 	};
 
 	this.touchingWall = this.sprite.body.blocked.left || this.sprite.body.blocked.right;
@@ -309,14 +311,20 @@ Player.prototype.jump = function() {
 Player.prototype.killAnimation = function () {
 	this.sprite.animations.play("death",24,false,true);
 
-	this.frozen = this.isDead = 60;
-	
+	this.frozen = this.isDead = 30;
 }
 
 Player.prototype.respawn = function () {
 	this.sprite.revive();
-	this.sprite.x = this.Game["player"+this.opponentNumber].sprite.x;
-	this.sprite.y = this.Game["player"+this.opponentNumber].sprite.y;
+	if(this.actionTrap == true){		
+		this.sprite.x = this.Game["player"+this.playerNumber].sprite.x;
+		this.sprite.y = this.Game["player"+this.playerNumber].sprite.y;
+	}
+	else{
+		this.sprite.x = this.Game["player"+this.opponentNumber].sprite.x;
+		this.sprite.y = this.Game["player"+this.opponentNumber].sprite.y;
+	}
+	this.actionTrap = false;
 }
 
 

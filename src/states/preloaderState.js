@@ -46,7 +46,7 @@ function loadStart () {
     this.game.load.spritesheet('trap_pikes', 'assets/traps/pikes.png', 201, 224, 3);
     this.game.load.image('trap_knifes', 'assets/traps/knife.png');
     this.game.load.image('trap_bigball', 'assets/traps/bigball.png');
-    this.game.load.image('trap_pikeswall', 'assets/traps/pikeswall.png');
+    this.game.load.image('trap_pikeswall', 'assets/traps/pikeswall2.png');
     this.game.load.spritesheet('trap_fireball', 'assets/traps/fireball.png', 223, 224, 15);
     this.game.load.spritesheet('lever', 'assets/traps/lever.png', 179, 160, 3);
 

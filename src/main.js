@@ -113,18 +113,58 @@ TR_start.prototype = {
         Game.stageEdges.left.anchor.setTo(1, 0);
         Game.stageEdges.top.anchor.setTo(0, 1);
 
-        new Lever({
-        	game:Game,
-        	x:400,
-        	y:3150,
-        	callback: function(){
-        		new Knifes({
-        			game:Game,
-        			x:100,
-        			y:3150
-        		})
-        	} 
-        })
+		//new Lever({ 
+		// 	game: Game,
+		// 	x: 1000,
+		// 	y: 3180,
+		// 	callBack: function() {
+		// 		new Knifes({
+		// 			game: Game,
+		// 			x: 400,
+		// 			y: 3150
+		// 		}); 
+		// 	}
+		// });
+
+		// new Lever({ 
+		// 	game: Game,
+		// 	x: 1000,
+		// 	y: 3180,
+		// 	callBack: function() {
+		// 		new Fireball({
+		// 			game: Game,
+		// 			x: 400,
+		// 			y: 3150
+		// 		}); 
+		// 	}
+		// });
+
+		// var myTrap = new Pikeswall({
+		// 	game: Game,
+		// 	x: 1500,
+		// 	y: 3030
+		// });
+
+		var myTrap = new Pikes({
+			game: Game,
+			x: 950,
+			y: 3250
+		});
+
+		// var myTrap = new Bigball({
+		// 	game: Game,
+		// 	x: 1500,
+		// 	y: 3180
+		// });
+
+		new Lever({
+		game: Game,
+		x: 1500,
+		y: 3182,
+		trap: myTrap
+		}); 
+
+        //Game.zap = Game.add.sprite(400, 3150,'trap_knifes');
 
 		// Game.go = Game.add.sprite(250,2650, 'decompte');
 		// Game.go.scale.setTo(3,3);

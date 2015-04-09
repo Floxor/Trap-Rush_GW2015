@@ -48,8 +48,10 @@ Trap.prototype.testKillPlayers = function () {
     var _this = this;
     this.game.physics.arcade.overlap(this.sprite, this.game.player1.sprite, function() {
         _this.game.player1.killAnimation();
+        _this.game.player1.frozen = 60;
     });
     this.game.physics.arcade.overlap(this.sprite, this.game.player2.sprite, function() {
         _this.game.player2.killAnimation();
+        _this.game.player2.frozen = 60;
     });
 };
