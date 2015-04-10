@@ -11,7 +11,7 @@ function Player (Game,type,pos,playerNumber) {
 	this.slidding 					= false;
 	this.touchingGround				= false;
 	this.acceleration 				= 0.1;
-	this.frozen 					= 60;
+	this.frozen 					= 100;
 	this.punchTimeout 				= 0;
 	this.grabTimeout 				= 0;
 	this.activeSpeedX 				= this.config.speedX;

@@ -113,63 +113,123 @@ TR_start.prototype = {
         Game.stageEdges.left.anchor.setTo(1, 0);
         Game.stageEdges.top.anchor.setTo(0, 1);
 
-		//new Lever({ 
-		// 	game: Game,
-		// 	x: 1000,
-		// 	y: 3180,
-		// 	callBack: function() {
-		// 		new Knifes({
-		// 			game: Game,
-		// 			x: 400,
-		// 			y: 3150
-		// 		}); 
-		// 	}
-		// });
 
-		// new Lever({ 
-		// 	game: Game,
-		// 	x: 1000,
-		// 	y: 3180,
-		// 	callBack: function() {
-		// 		new Fireball({
-		// 			game: Game,
-		// 			x: 400,
-		// 			y: 3150
-		// 		}); 
-		// 	}
-		// });
-
-		// var myTrap = new Pikeswall({
-		// 	game: Game,
-		// 	x: 1500,
-		// 	y: 3030
-		// });
-
-		var myTrap = new Pikes({
+		var pikes1 = new Pikes({
 			game: Game,
 			x: 950,
 			y: 3250
 		});
-
-		// var myTrap = new Bigball({
-		// 	game: Game,
-		// 	x: 1500,
-		// 	y: 3180
-		// });
-
-		new Lever({
+		var leverP1 = new Lever({
 		game: Game,
 		x: 1500,
-		y: 3182,
-		trap: myTrap
-		}); 
+		y: 3210,
+		trap: pikes1
+		});
 
-        //Game.zap = Game.add.sprite(400, 3150,'trap_knifes');
+		var bigball1 = new Bigball({
+			game: Game,
+			x: 3250,
+			y: 3380
+		});
+		var leverBB1 = new Lever({
+		game: Game,
+		x: 1870,
+		y: 3570,
+		trap: bigball1
+		});
 
-		// Game.go = Game.add.sprite(250,2650, 'decompte');
-		// Game.go.scale.setTo(3,3);
-		// Game.go.animations.add('start');
-		// Game.go.animations.play('start', 12, true);
+        var leverK1 = new Lever({ 
+			game: Game,
+			x: 4800,
+			y: 3930,
+			callBack: function() {
+				new Knifes({
+					game: Game,
+					x: 5000,
+					y: 3600
+				}); 
+			}
+		});
+
+		var bigball2 = new Bigball({
+			game: Game,
+			x: 6750,
+			y: 1500,
+			direction: 'right',
+			speed: 1.5
+		});
+		var leverBB2 = new Lever({
+		game: Game,
+		x: 6600,
+		y: 3150,
+		trap: bigball2
+		});
+
+		var pikes2 = new Pikes({
+			game: Game,
+			x: 5500,
+			y: 2960
+		});
+		var leverP2 = new Lever({
+		game: Game,
+		x: 5300,
+		y: 2250,
+		trap: pikes2
+		});
+
+		var leverF1 = new Lever({ 
+			game: Game,
+			x: 4500,
+			y: 2250,
+			callBack: function() {
+				new Fireball({
+					game: Game,
+					x: 4500,
+					y: 2200
+				}); 
+			}
+		});
+
+		var pikeswall1 = new Pikeswall({
+			game: Game,
+			x: 5200,
+			y: 1650
+		});
+		var leverPW1 = new Lever({
+		game: Game,
+		x: 3700,
+		y: 2250,
+		trap: pikeswall1
+		});
+
+		var bigball3 = new Bigball({
+			game: Game,
+			x: 1000,
+			y: 1790,
+			direction: 'right'
+		});
+		var leverBB3 = new Lever({
+		game: Game,
+		x: 1600,
+		y: 2490,
+		trap: bigball3
+		});
+
+		var pikeswall2 = new Pikeswall({
+			game: Game,
+			x: 2400,
+			y: 100
+		});
+		var leverPW2 = new Lever({
+		game: Game,
+		x: 2000,
+		y: 810,
+		trap: pikeswall2
+		});
+
+		Game.go = Game.add.sprite(250,2500, 'decompte');
+		Game.go.animations.add('start');
+		Game.go.animations.play('start', 24, true);
 
 	},
 

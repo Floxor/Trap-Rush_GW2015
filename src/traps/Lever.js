@@ -58,6 +58,7 @@ Lever.prototype.activation = function() {
             this.trap.start();
         }
     }
+    this.activation.called = false;
 };
 
 Lever.prototype.animation = function() {

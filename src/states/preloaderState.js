@@ -41,6 +41,7 @@ function loadStart () {
 	this.game.load.image('bgMenu', 'assets/ecran-personages.png');
 	this.game.load.spritesheet('player', 'assets/player.png',114,153);
 	this.game.load.spritesheet('jump', 'assets/saut.png',91,85);
+	this.game.load.spritesheet('decompte', 'assets/decompte1.png',824,1237);
 
     //traps
     this.game.load.spritesheet('trap_pikes', 'assets/traps/pikes.png', 201, 224, 3);
@@ -61,7 +62,6 @@ function loadStart () {
 	this.game.load.image('IconP3', 'assets/IconP3.png');
 	this.game.load.image('IconP4', 'assets/IconP4.png');
 
-	//this.game.load.spritesheet('decompte', 'assets/decompte.png',203,511);
 }
 
 function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles) {
