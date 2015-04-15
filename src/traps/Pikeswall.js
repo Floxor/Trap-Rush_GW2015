@@ -40,8 +40,42 @@ function Pikeswall(pParams) {
         // pigArrives.to({x:150}, 1000, Phaser.Easing.Bounce.Out);
         // pigArrives.onComplete.add(firstTween, this);
         // pigArrives.start();
+        var _this = this;
+        this.game.physics.arcade.overlap(this.hitArea, this.game.player1.sprite, function() {
+            _this.game.player1.killAnimation();
+        });
+        this.game.physics.arcade.overlap(this.hitArea, this.game.player2.sprite, function() {
+            _this.game.player2.killAnimation();
+        });
 
-        this.testKillPlayers();
+    };
+
+    this.start = function () {
+
+        //COLLISION state: Normal
+        if (this.direction === 'left') {
+            this.hitArea = this.game.add.sprite(0, 0, null);
+        } else if (this.direction === 'right') {
+            this.hitArea = this.game.add.sprite(1, 0, null);
+        }
+        
+        this.game.physics.enable(this.hitArea, Phaser.Physics.ARCADE);
+        this.hitArea.body.allowGravity = false;
+        
+
+
+        if (this.direction === 'left') {
+            this.hitArea.body.setSize(this.sprite.height, this.sprite.width, this.sprite.x - this.sprite.height, this.sprite.y);
+        } else if (this.direction === 'right') {
+            this.hitArea.body.setSize(this.sprite.height, this.sprite.width, this.sprite.x, this.sprite.y);
+
+        }
+
+
+        this.doLoop = this.doAction;
+
+        
+
     };
 
     this.addTrap();

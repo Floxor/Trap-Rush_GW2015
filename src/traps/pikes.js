@@ -11,6 +11,7 @@ function Pikes(pParams) {
     this.init();
 
     this.doNormal = function () {
+        var _this = this;
         this.game.physics.arcade.overlap(this.hitArea, this.game.player1.sprite, function() {
             _this.game.player1.killAnimation();
         });
@@ -37,10 +38,8 @@ function Pikes(pParams) {
         //ANIMATION
         for (var i = this.quantity -1; i >= 0; i--) {
             this.sprite[i].animations.play('trap_pikes'+i, 20, false, false);
-            console.log(i+' ggg');
         }
 
-        console.log('ANIMATION PIKES');
     };
 
     this.addTrap();
